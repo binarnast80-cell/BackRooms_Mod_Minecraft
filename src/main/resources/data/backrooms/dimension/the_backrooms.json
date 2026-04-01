@@ -1,0 +1,10 @@
+{
+    "type": "backrooms:backrooms_type",
+    "generator": {
+        "type": "backrooms:backrooms_chunkgen",
+        "biome_source": {
+            "type": "minecraft:fixed",
+            "biome": "backrooms:backrooms_biome"
+        }
+    }
+}

@@ -1,0 +1,28 @@
+# Gradle
+.gradle/
+build/
+gradle/wrapper/gradle-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+*.launch
+out/
+
+# Fabric Loom
+run/
+remappedSrc/
+.fabric/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temp
+generate_textures.ps1
+build_output.txt

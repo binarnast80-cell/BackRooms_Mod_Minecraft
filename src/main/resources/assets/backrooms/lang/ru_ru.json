@@ -1,0 +1,8 @@
+{
+    "block.backrooms.backrooms_wall": "Стена Закулисья",
+    "block.backrooms.backrooms_floor": "Пол Закулисья",
+    "block.backrooms.backrooms_ceiling": "Потолок Закулисья",
+    "entity.backrooms.lurker": "Скрытень",
+    "entity.backrooms.howler": "Воющий",
+    "itemGroup.backrooms": "Закулисье"
+}

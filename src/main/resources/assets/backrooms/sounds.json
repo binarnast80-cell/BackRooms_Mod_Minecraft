@@ -1,0 +1,29 @@
+{
+    "lamp_hum": {
+        "subtitle": "subtitles.backrooms.lamp_hum",
+        "sounds": [
+            {
+                "name": "backrooms:lamp_hum",
+                "stream": true
+            }
+        ]
+    },
+    "ambient_backrooms": {
+        "subtitle": "subtitles.backrooms.ambient",
+        "sounds": [
+            {
+                "name": "backrooms:ambient_backrooms",
+                "stream": true
+            }
+        ]
+    },
+    "howler_cry": {
+        "subtitle": "subtitles.backrooms.howler_cry",
+        "sounds": [
+            {
+                "name": "backrooms:howler_cry",
+                "stream": true
+            }
+        ]
+    }
+}

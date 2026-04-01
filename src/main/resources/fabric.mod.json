@@ -1,0 +1,23 @@
+{
+    "schemaVersion": 1,
+    "id": "backrooms",
+    "version": "${version}",
+    "name": "Backrooms",
+    "description": "Через 120 секунд проваливайтесь в бесконечный лабиринт Backrooms. Выхода нет.",
+    "authors": ["BackroomsDev"],
+    "contact": {},
+    "license": "MIT",
+    "icon": "assets/backrooms/icon.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": ["com.backrooms.mod.BackroomsMod"],
+        "client": ["com.backrooms.mod.BackroomsModClient"]
+    },
+    "mixins": [],
+    "depends": {
+        "fabricloader": ">=0.15.0",
+        "minecraft": "~1.20.1",
+        "java": ">=17",
+        "fabric-api": "*"
+    }
+}

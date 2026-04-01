@@ -1,0 +1,8 @@
+{
+    "block.backrooms.backrooms_wall": "Backrooms Wall",
+    "block.backrooms.backrooms_floor": "Backrooms Floor",
+    "block.backrooms.backrooms_ceiling": "Backrooms Ceiling",
+    "entity.backrooms.lurker": "Lurker",
+    "entity.backrooms.howler": "Howler",
+    "itemGroup.backrooms": "Backrooms"
+}
