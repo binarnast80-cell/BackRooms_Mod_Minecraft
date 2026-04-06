@@ -5,6 +5,7 @@ import com.backrooms.mod.client.BackroomsOverlay;
 import com.backrooms.mod.entity.ModEntities;
 import com.backrooms.mod.entity.client.HowlerRenderer;
 import com.backrooms.mod.entity.client.LurkerRenderer;
+import com.backrooms.mod.entity.client.MimicRenderer;
 import com.backrooms.mod.network.ModNetworking;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -18,5 +19,6 @@ public class BackroomsModClient implements ClientModInitializer {
 
         EntityRendererRegistry.register(ModEntities.LURKER, LurkerRenderer::new);
         EntityRendererRegistry.register(ModEntities.HOWLER, HowlerRenderer::new);
+        EntityRendererRegistry.register(ModEntities.MIMIC, MimicRenderer::new);
     }
 }

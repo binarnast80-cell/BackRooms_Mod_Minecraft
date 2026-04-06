@@ -31,9 +31,18 @@ public class ModEntities {
                     .trackRangeChunks(10)
                     .build());
 
+    public static final EntityType<MimicEntity> MIMIC = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(BackroomsMod.MOD_ID, "mimic"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, MimicEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.6f, 1.8f))
+                    .trackRangeChunks(10)
+                    .build());
+
     public static void register() {
         FabricDefaultAttributeRegistry.register(LURKER, LurkerEntity.createLurkerAttributes());
         FabricDefaultAttributeRegistry.register(HOWLER, HowlerEntity.createHowlerAttributes());
+        FabricDefaultAttributeRegistry.register(MIMIC, MimicEntity.createMimicAttributes());
 
         // Разрешаем спавн при любом уровне света (Backrooms всегда освещены)
         SpawnRestriction.register(LURKER,
@@ -42,6 +51,10 @@ public class ModEntities {
                 (type, world, reason, pos, random) -> true // Всегда разрешён
         );
         SpawnRestriction.register(HOWLER,
+                SpawnRestriction.Location.ON_GROUND,
+                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                (type, world, reason, pos, random) -> true);
+        SpawnRestriction.register(MIMIC,
                 SpawnRestriction.Location.ON_GROUND,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 (type, world, reason, pos, random) -> true);

@@ -9,7 +9,14 @@
         "water_fog_color": 329011
     },
     "spawners": {
-        "monster": [],
+        "monster": [
+            {
+                "type": "backrooms:mimic",
+                "weight": 8,
+                "minCount": 1,
+                "maxCount": 1
+            }
+        ],
         "creature": [],
         "ambient": [],
         "axolotls": [],
