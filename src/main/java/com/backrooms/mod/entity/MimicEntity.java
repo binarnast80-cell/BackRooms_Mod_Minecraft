@@ -7,11 +7,14 @@ import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
+import net.minecraft.entity.ai.goal.RevengeGoal;
+import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -23,7 +26,12 @@ import java.util.EnumSet;
  */
 public class MimicEntity extends HostileEntity {
     private static final int COPY_DELAY_TICKS = 12;
+    private static final double SUDDEN_ATTACK_RANGE = 2.5;
+    private static final int TELEPORT_CHECK_INTERVAL = 100;
+    
     private final Deque<PlayerSnapshot> playerMovementQueue = new ArrayDeque<>();
+    private int ticksSinceLastTeleport = 0;
+    private boolean shouldTeleport = false;
 
     public MimicEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
@@ -32,11 +40,13 @@ public class MimicEntity extends HostileEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new MeleeAttackGoal(this, 1.0, true));
-        this.goalSelector.add(2, new CopyPlayerMovementGoal(this, 1.0));
-        this.goalSelector.add(3, new WanderAroundFarGoal(this, 0.75));
-        this.goalSelector.add(4, new LookAtEntityGoal(this, PlayerEntity.class, 20.0f));
-        this.goalSelector.add(5, new LookAroundGoal(this));
+        this.goalSelector.add(1, new SuddenAttackGoal(this, 8.0, 1.0));
+        this.goalSelector.add(2, new MeleeAttackGoal(this, 1.0, true));
+        this.goalSelector.add(3, new CopyPlayerMovementGoal(this, 1.0));
+        this.goalSelector.add(4, new WatchingGoal(this));
+        this.goalSelector.add(5, new WanderAroundFarGoal(this, 0.75));
+        this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 20.0f));
+        this.goalSelector.add(7, new LookAroundGoal(this));
 
         this.targetSelector.add(1, new RevengeGoal(this));
         this.targetSelector.add(2, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
@@ -46,9 +56,24 @@ public class MimicEntity extends HostileEntity {
     public void tick() {
         super.tick();
 
-        if (!this.world.isClient) {
+        if (!this.getWorld().isClient) {
+            this.ticksSinceLastTeleport++;
+            
             if (this.getTarget() instanceof PlayerEntity player) {
                 recordPlayerMovement(player);
+                
+                // Проверяем расстояние для телепортации
+                double distSquared = this.squaredDistanceTo(player);
+                if (this.ticksSinceLastTeleport > TELEPORT_CHECK_INTERVAL && distSquared > 100.0 && Math.random() < 0.15) {
+                    this.shouldTeleport = true;
+                    this.ticksSinceLastTeleport = 0;
+                }
+                
+                // Выполняем телепортацию "из ниоткуда" позади игрока
+                if (this.shouldTeleport && this.random.nextFloat() < 0.3) {
+                    teleportBehindPlayer(player);
+                    this.shouldTeleport = false;
+                }
             } else {
                 this.playerMovementQueue.clear();
             }
@@ -66,9 +91,20 @@ public class MimicEntity extends HostileEntity {
         return HostileEntity.createHostileAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0)
                 .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 8.0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.1)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.12)  // Как у игрока
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0)
                 .add(EntityAttributes.GENERIC_ARMOR, 3.0);
+    }
+
+    private void teleportBehindPlayer(PlayerEntity player) {
+        // Телепортируемся позади игрока на расстояние 4-8 блоков
+        Vec3d playerDir = player.getRotationVector();
+        double teleportDist = 4.0 + this.random.nextDouble() * 4.0;
+        double newX = player.getX() - playerDir.x * teleportDist;
+        double newY = player.getY();
+        double newZ = player.getZ() - playerDir.z * teleportDist;
+        
+        this.teleport(newX, newY, newZ);
     }
 
     @Override
@@ -80,15 +116,11 @@ public class MimicEntity extends HostileEntity {
         private final double x;
         private final double y;
         private final double z;
-        private final float yaw;
-        private final float pitch;
 
         private PlayerSnapshot(double x, double y, double z, float yaw, float pitch) {
             this.x = x;
             this.y = y;
             this.z = z;
-            this.yaw = yaw;
-            this.pitch = pitch;
         }
     }
 
@@ -130,4 +162,84 @@ public class MimicEntity extends HostileEntity {
             }
         }
     }
+
+    /**
+     * Внезапная атака когда игрок слишком близко
+     */
+    private static final class SuddenAttackGoal extends Goal {
+        private final MimicEntity mimic;
+        private final double attackRange;
+        private final double speed;
+
+        private SuddenAttackGoal(MimicEntity mimic, double attackRange, double speed) {
+            this.mimic = mimic;
+            this.attackRange = attackRange;
+            this.speed = speed;
+            this.setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+        }
+
+        @Override
+        public boolean canStart() {
+            if (!(this.mimic.getTarget() instanceof PlayerEntity)) return false;
+            PlayerEntity target = (PlayerEntity) this.mimic.getTarget();
+            double distance = this.mimic.squaredDistanceTo(target);
+            return distance < (attackRange * attackRange);
+        }
+
+        @Override
+        public void tick() {
+            if (!(this.mimic.getTarget() instanceof PlayerEntity)) return;
+            PlayerEntity target = (PlayerEntity) this.mimic.getTarget();
+
+            // Быстро движимся к цели
+            this.mimic.getNavigation().startMovingTo(target, this.speed * 1.5);
+            this.mimic.getLookControl().lookAt(target, 30.0f, 30.0f);
+
+            // Атакуем когда очень близко
+            if (this.mimic.squaredDistanceTo(target) < SUDDEN_ATTACK_RANGE * SUDDEN_ATTACK_RANGE) {
+                this.mimic.tryAttack(target);
+            }
+        }
+    }
+
+    /**
+     * Поведение "смотрит" - иногда просто стоит и наблюдает
+     */
+    private static final class WatchingGoal extends Goal {
+        private final MimicEntity mimic;
+        private int nextWatchTick = 0;
+
+        private WatchingGoal(MimicEntity mimic) {
+            this.mimic = mimic;
+            this.setControls(EnumSet.noneOf(Control.class));
+        }
+
+        @Override
+        public boolean canStart() {
+            if (!(this.mimic.getTarget() instanceof PlayerEntity) || this.mimic.playerMovementQueue.isEmpty()) {
+                return false;
+            }
+            // 15% шанс начать наблюдение
+            return this.mimic.random.nextFloat() < 0.15;
+        }
+
+        @Override
+        public void start() {
+            this.nextWatchTick = 40 + this.mimic.random.nextInt(60); // Смотрит 2-5 секунд
+        }
+
+        @Override
+        public void tick() {
+            if (this.mimic.getTarget() instanceof PlayerEntity target) {
+                this.mimic.getLookControl().lookAt(target.getX(), target.getEyeY(), target.getZ(), 30.0f, 30.0f);
+            }
+            this.nextWatchTick--;
+        }
+
+        @Override
+        public boolean shouldContinue() {
+            return this.nextWatchTick > 0 && this.mimic.getTarget() instanceof PlayerEntity;
+        }
+    }
 }
+

@@ -2,7 +2,6 @@ package com.backrooms.mod.client;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 
 /**
  * Оверлей затемнения экрана при телепортации в Backrooms.

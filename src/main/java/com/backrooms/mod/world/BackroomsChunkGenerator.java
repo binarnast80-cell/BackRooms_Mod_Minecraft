@@ -321,7 +321,7 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
             if (floorBlock.isOf(ModBlocks.BACKROOMS_FLOOR) &&
                     feetBlock.isAir() && headBlock.isAir()) {
 
-                Entity entity = type.create(region.toServerWorld());
+                Entity entity = type.create(null);
                 if (entity != null) {
                     // Спавн строго на Y=1 (на полу)
                     entity.refreshPositionAndAngles(
