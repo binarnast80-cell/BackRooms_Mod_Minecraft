@@ -11,6 +11,9 @@ import net.minecraft.entity.ai.goal.RevengeGoal;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
@@ -19,22 +22,40 @@ import net.minecraft.util.math.Vec3d;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.EnumSet;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Mimic — криповый монстр Backrooms, который пытается копировать движения игрока
  * и подкрадываться незаметно, прежде чем внезапно атаковать.
  */
 public class MimicEntity extends HostileEntity {
+    private static final TrackedData<Optional<UUID>> SKIN_OWNER = DataTracker.registerData(MimicEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
     private static final int COPY_DELAY_TICKS = 12;
+    private static final double MOVEMENT_RECORD_DISTANCE = 0.2;
+    private static final float MOVEMENT_RECORD_ANGLE = 3.0f;
     private static final double SUDDEN_ATTACK_RANGE = 2.5;
     private static final int TELEPORT_CHECK_INTERVAL = 100;
-    
+    private static final int AMBUSH_RANGE = 20;
+    private static final int AMBUSH_COOLDOWN = 200;
+    private static final int LUNGE_COOLDOWN = 40;
+    private static final double LUNGE_SPEED_MULTIPLIER = 1.8;
+    private static final double AMBUSH_DISTANCE_MIN = 6.0;
+
     private final Deque<PlayerSnapshot> playerMovementQueue = new ArrayDeque<>();
     private int ticksSinceLastTeleport = 0;
+    private int ambushCooldown = 0;
+    private int lungeCooldown = 0;
     private boolean shouldTeleport = false;
 
     public MimicEntity(EntityType<? extends HostileEntity> entityType, World world) {
         super(entityType, world);
+    }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(SKIN_OWNER, Optional.empty());
     }
 
     @Override
@@ -57,23 +78,23 @@ public class MimicEntity extends HostileEntity {
         super.tick();
 
         if (!this.getWorld().isClient) {
+            if (this.ambushCooldown > 0) {
+                this.ambushCooldown--;
+            }
+            if (this.lungeCooldown > 0) {
+                this.lungeCooldown--;
+            }
             this.ticksSinceLastTeleport++;
-            
+
             if (this.getTarget() instanceof PlayerEntity player) {
-                recordPlayerMovement(player);
-                
-                // Проверяем расстояние для телепортации
-                double distSquared = this.squaredDistanceTo(player);
-                if (this.ticksSinceLastTeleport > TELEPORT_CHECK_INTERVAL && distSquared > 100.0 && Math.random() < 0.15) {
-                    this.shouldTeleport = true;
-                    this.ticksSinceLastTeleport = 0;
+                setSkinOwner(player);
+
+                if (shouldRecordMovement(player)) {
+                    recordPlayerMovement(player);
                 }
-                
-                // Выполняем телепортацию "из ниоткуда" позади игрока
-                if (this.shouldTeleport && this.random.nextFloat() < 0.3) {
-                    teleportBehindPlayer(player);
-                    this.shouldTeleport = false;
-                }
+
+                maybeAmbush(player);
+                maybeTeleportBehind(player);
             } else {
                 this.playerMovementQueue.clear();
             }
@@ -87,6 +108,58 @@ public class MimicEntity extends HostileEntity {
         }
     }
 
+    private void setSkinOwner(PlayerEntity player) {
+        this.dataTracker.set(SKIN_OWNER, Optional.of(player.getUuid()));
+    }
+
+    public Optional<UUID> getSkinOwnerUuid() {
+        return this.dataTracker.get(SKIN_OWNER);
+    }
+
+    private void maybeAmbush(PlayerEntity player) {
+        if (this.ambushCooldown > 0) {
+            return;
+        }
+
+        double distance = this.squaredDistanceTo(player);
+        if (distance > AMBUSH_RANGE * AMBUSH_RANGE || distance < AMBUSH_DISTANCE_MIN * AMBUSH_DISTANCE_MIN) {
+            return;
+        }
+
+        if (player.canSee(this)) {
+            return;
+        }
+
+        if (this.random.nextFloat() < 0.12f) {
+            teleportBehindPlayer(player);
+            this.ambushCooldown = AMBUSH_COOLDOWN;
+        }
+    }
+
+    private void maybeTeleportBehind(PlayerEntity player) {
+        double distSquared = this.squaredDistanceTo(player);
+        if (this.ticksSinceLastTeleport > TELEPORT_CHECK_INTERVAL && distSquared > 100.0 && this.random.nextFloat() < 0.12f) {
+            if (teleportBehindPlayer(player)) {
+                this.ticksSinceLastTeleport = 0;
+            }
+        }
+    }
+
+    private boolean teleportBehindPlayer(PlayerEntity player) {
+        Vec3d playerDir = player.getRotationVector();
+        double teleportDist = 4.0 + this.random.nextDouble() * 4.0;
+        double newX = player.getX() - playerDir.x * teleportDist;
+        double newY = player.getY();
+        double newZ = player.getZ() - playerDir.z * teleportDist;
+        
+        boolean success = this.teleport(newX, newY, newZ);
+        if (success) {
+            this.getNavigation().stop();
+            return true;
+        }
+        return false;
+    }
+
     public static DefaultAttributeContainer.Builder createMimicAttributes() {
         return HostileEntity.createHostileAttributes()
                 .add(EntityAttributes.GENERIC_MAX_HEALTH, 40.0)
@@ -94,17 +167,6 @@ public class MimicEntity extends HostileEntity {
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.12)  // Как у игрока
                 .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32.0)
                 .add(EntityAttributes.GENERIC_ARMOR, 3.0);
-    }
-
-    private void teleportBehindPlayer(PlayerEntity player) {
-        // Телепортируемся позади игрока на расстояние 4-8 блоков
-        Vec3d playerDir = player.getRotationVector();
-        double teleportDist = 4.0 + this.random.nextDouble() * 4.0;
-        double newX = player.getX() - playerDir.x * teleportDist;
-        double newY = player.getY();
-        double newZ = player.getZ() - playerDir.z * teleportDist;
-        
-        this.teleport(newX, newY, newZ);
     }
 
     @Override
@@ -116,11 +178,15 @@ public class MimicEntity extends HostileEntity {
         private final double x;
         private final double y;
         private final double z;
+        private final float yaw;
+        private final float pitch;
 
         private PlayerSnapshot(double x, double y, double z, float yaw, float pitch) {
             this.x = x;
             this.y = y;
             this.z = z;
+            this.yaw = yaw;
+            this.pitch = pitch;
         }
     }
 
@@ -170,6 +236,7 @@ public class MimicEntity extends HostileEntity {
         private final MimicEntity mimic;
         private final double attackRange;
         private final double speed;
+        private int chargeTicks = 0;
 
         private SuddenAttackGoal(MimicEntity mimic, double attackRange, double speed) {
             this.mimic = mimic;
@@ -187,15 +254,27 @@ public class MimicEntity extends HostileEntity {
         }
 
         @Override
+        public void start() {
+            this.chargeTicks = 6;
+        }
+
+        @Override
         public void tick() {
             if (!(this.mimic.getTarget() instanceof PlayerEntity)) return;
             PlayerEntity target = (PlayerEntity) this.mimic.getTarget();
 
-            // Быстро движимся к цели
-            this.mimic.getNavigation().startMovingTo(target, this.speed * 1.5);
+            if (this.chargeTicks > 0) {
+                this.chargeTicks--;
+                this.mimic.getLookControl().lookAt(target, 30.0f, 30.0f);
+                return;
+            }
+
+            Vec3d direction = target.getRotationVector();
+            this.mimic.setVelocity(direction.x * this.speed * LUNGE_SPEED_MULTIPLIER, 0.0, direction.z * this.speed * LUNGE_SPEED_MULTIPLIER);
+            this.mimic.velocityModified = true;
+            this.mimic.getNavigation().startMovingTo(target, this.speed * LUNGE_SPEED_MULTIPLIER);
             this.mimic.getLookControl().lookAt(target, 30.0f, 30.0f);
 
-            // Атакуем когда очень близко
             if (this.mimic.squaredDistanceTo(target) < SUDDEN_ATTACK_RANGE * SUDDEN_ATTACK_RANGE) {
                 this.mimic.tryAttack(target);
             }

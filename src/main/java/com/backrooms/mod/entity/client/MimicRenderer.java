@@ -1,6 +1,11 @@
 package com.backrooms.mod.entity.client;
 
 import com.backrooms.mod.entity.MimicEntity;
+import java.util.Optional;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayers;
@@ -20,8 +25,20 @@ public class MimicRenderer extends BipedEntityRenderer<MimicEntity, PlayerEntity
 
     @Override
     public Identifier getTexture(MimicEntity entity) {
-        // Стараемся использовать текстуру ближайшего игрока
-        // В будущем можно добавить кэширование скинов игроков
-        return DEFAULT_TEXTURE;
+        if (entity == null) {
+            return DEFAULT_TEXTURE;
+        }
+
+        ClientPlayNetworkHandler networkHandler = MinecraftClient.getInstance().getNetworkHandler();
+        if (networkHandler == null) {
+            return DEFAULT_TEXTURE;
+        }
+
+        return entity.getSkinOwnerUuid()
+                .flatMap(uuid -> {
+                    PlayerListEntry entry = networkHandler.getPlayerListEntry(uuid);
+                    return entry != null ? Optional.ofNullable(entry.getSkinTexture()) : Optional.empty();
+                })
+                .orElse(DEFAULT_TEXTURE);
     }
 }
