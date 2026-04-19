@@ -72,6 +72,7 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         BlockState floorState = ModBlocks.BACKROOMS_FLOOR.getDefaultState();
         BlockState wallState = ModBlocks.BACKROOMS_WALL.getDefaultState();
         BlockState ceilingState = ModBlocks.BACKROOMS_CEILING.getDefaultState();
+        BlockState lampState = ModBlocks.BACKROOMS_LAMP.getDefaultState();
         BlockState airState = Blocks.AIR.getDefaultState();
 
         int startX = chunk.getPos().getStartX();
@@ -86,12 +87,13 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
                 // Пол (неуязвимый)
                 chunk.setBlockState(mutable.set(lx, FLOOR_Y, lz), floorState, false);
 
-                // Потолок (неуязвимый + свет)
-                chunk.setBlockState(mutable.set(lx, CEILING_Y, lz), ceilingState, false);
-
-                // Определяем: стена или воздух
+                // Потолок: тёмный по умолчанию, лампы — редко, по 2 в ряд
                 boolean wall = isWall(wx, wz);
+                boolean isLamp = !wall && isLampPosition(wx, wz);
+                chunk.setBlockState(mutable.set(lx, CEILING_Y, lz),
+                        isLamp ? lampState : ceilingState, false);
 
+                // Стены или воздух
                 for (int y = WALL_MIN_Y; y <= WALL_MAX_Y; y++) {
                     chunk.setBlockState(mutable.set(lx, y, lz), wall ? wallState : airState, false);
                 }
@@ -99,6 +101,30 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         }
 
         return CompletableFuture.completedFuture(chunk);
+    }
+
+    // ======================== ГЕНЕРАЦИЯ ЛАМП ========================
+
+    /**
+     * Размещение ламп по 2 в ряд (вдоль оси X).
+     * Сетка 16×16 — в каждой ячейке с ~12% шансом появляется пара ламп.
+     * Лампы тусклые (luminance=7), создают островки света в темноте.
+     */
+    private boolean isLampPosition(int wx, int wz) {
+        int gridSize = 16; // крупная сетка — лампы далеко друг от друга
+        int cellX = Math.floorDiv(wx, gridSize);
+        int cellZ = Math.floorDiv(wz, gridSize);
+        int localX = Math.floorMod(wx, gridSize);
+        int localZ = Math.floorMod(wz, gridSize);
+
+        // Хеш ячейки — определяет есть ли лампа в этой ячейке
+        long cellHash = mixHash(WORLD_SEED + 777, cellX * 31337L, cellZ * 27191L);
+        boolean cellHasLamp = (Math.abs(cellHash) % 100) < 12; // ~12% ячеек имеют лампы
+        if (!cellHasLamp) return false;
+
+        // Лампа по центру ячейки: пара из 2 блоков вдоль X
+        // localZ == 7 (одна линия), localX == 7 или 8 (два блока в ряд)
+        return localZ == 7 && (localX == 7 || localX == 8);
     }
 
     // ======================== ГЕНЕРАЦИЯ СТЕН ========================
@@ -279,14 +305,19 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         int cz = region.getCenterPos().getStartZ();
         Random random = new CheckedRandom(region.getSeed() + region.getCenterPos().toLong());
 
-        // Lurker: 8% шанс на чанк
-        if (random.nextInt(12) == 0) {
+        // Lurker: ~15% шанс на чанк — часто встречается
+        if (random.nextInt(7) == 0) {
             spawnEntitySafe(region, random, cx, cz, ModEntities.LURKER);
         }
 
-        // Howler: 4% шанс на чанк
-        if (random.nextInt(25) == 0) {
+        // Howler: ~8% шанс на чанк — нередко
+        if (random.nextInt(12) == 0) {
             spawnEntitySafe(region, random, cx, cz, ModEntities.HOWLER);
+        }
+
+        // Mimic: ~1% шанс на чанк — крайне редкий
+        if (random.nextInt(100) == 0) {
+            spawnEntitySafe(region, random, cx, cz, ModEntities.MIMIC);
         }
     }
 
@@ -321,7 +352,7 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
             if (floorBlock.isOf(ModBlocks.BACKROOMS_FLOOR) &&
                     feetBlock.isAir() && headBlock.isAir()) {
 
-                Entity entity = type.create(null);
+                Entity entity = type.create(region.toServerWorld());
                 if (entity != null) {
                     // Спавн строго на Y=1 (на полу)
                     entity.refreshPositionAndAngles(

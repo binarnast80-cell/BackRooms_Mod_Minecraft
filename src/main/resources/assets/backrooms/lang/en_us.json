@@ -2,7 +2,9 @@
     "block.backrooms.backrooms_wall": "Backrooms Wall",
     "block.backrooms.backrooms_floor": "Backrooms Floor",
     "block.backrooms.backrooms_ceiling": "Backrooms Ceiling",
+    "block.backrooms.backrooms_lamp": "Backrooms Lamp",
     "entity.backrooms.lurker": "Lurker",
     "entity.backrooms.howler": "Howler",
+    "entity.backrooms.mimic": "Mimic",
     "itemGroup.backrooms": "Backrooms"
 }

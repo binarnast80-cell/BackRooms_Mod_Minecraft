@@ -2,11 +2,14 @@ package com.backrooms.mod.client;
 
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 
 /**
- * Оверлей затемнения экрана при телепортации в Backrooms.
- * Рисует чёрный прямоугольник поверх всего HUD с изменяемой прозрачностью.
- * Анимация: плавное затемнение → удержание → плавное осветление.
+ * Атмосферный оверлей Backrooms.
+ *
+ * Только ТЁПЛЫЙ жёлтый тинт — как свет от старых флуоресцентных ламп.
+ * Без виньетки, без чёрных краёв, без мерцания.
+ * Чистая, лёгкая, тёплая атмосфера.
  */
 public class BackroomsOverlay {
 
@@ -15,13 +18,13 @@ public class BackroomsOverlay {
     private static boolean fadingIn = true;
     private static int fadeTimer = 0;
 
-    private static final int FADE_IN_TICKS = 40;   // 2 сек — затемнение
-    private static final int FADE_OUT_TICKS = 40;  // 2 сек — осветление
+    private static final int FADE_IN_TICKS = 40;
+    private static final int FADE_OUT_TICKS = 40;
 
-    /**
-     * Запускает эффект затемнения/осветления.
-     * @param fadeIn true = затемнение, false = осветление
-     */
+    // Тёплый жёлтый тинт: #D4B86A (золотисто-жёлтый), alpha ~12%
+    // Лёгкий, еле заметный — как свет от старых ламп
+    private static final int WARM_TINT = 0x1FD4B86A;
+
     public static void startFade(boolean fadeIn) {
         fading = true;
         fadingIn = fadeIn;
@@ -35,21 +38,30 @@ public class BackroomsOverlay {
 
     public static void register() {
         HudRenderCallback.EVENT.register((drawContext, tickDelta) -> {
+            MinecraftClient client = MinecraftClient.getInstance();
+            int w = client.getWindow().getScaledWidth();
+            int h = client.getWindow().getScaledHeight();
+
+            // ── Тёплый тинт (только в Backrooms) ─────────────────────────
+            if (client.world != null && client.player != null) {
+                Identifier dimId = client.world.getRegistryKey().getValue();
+                if (dimId.getNamespace().equals("backrooms")) {
+                    drawContext.fill(0, 0, w, h, WARM_TINT);
+                }
+            }
+
+            // ── Фейд при телепортации ─────────────────────────────────────
             if (!fading && fadeAlpha <= 0) return;
 
             fadeTimer++;
-
             if (fading) {
                 if (fadingIn) {
-                    // Плавное затемнение
                     if (fadeTimer <= FADE_IN_TICKS) {
                         fadeAlpha = (float) fadeTimer / FADE_IN_TICKS;
                     } else {
                         fadeAlpha = 1.0f;
-                        // Удерживаем чёрный экран до получения пакета fade-out
                     }
                 } else {
-                    // Плавное осветление
                     if (fadeTimer <= FADE_OUT_TICKS) {
                         fadeAlpha = 1.0f - (float) fadeTimer / FADE_OUT_TICKS;
                     } else {
@@ -58,13 +70,9 @@ public class BackroomsOverlay {
                     }
                 }
             }
-
             if (fadeAlpha > 0.0f) {
-                MinecraftClient client = MinecraftClient.getInstance();
-                int width = client.getWindow().getScaledWidth();
-                int height = client.getWindow().getScaledHeight();
-                int alpha = ((int) (fadeAlpha * 255.0f)) << 24; // ARGB: alpha в старших битах
-                drawContext.fill(0, 0, width, height, alpha); // Чёрный цвет (RGB=0) + alpha
+                int alpha = ((int) (fadeAlpha * 255.0f)) << 24;
+                drawContext.fill(0, 0, w, h, alpha);
             }
         });
     }

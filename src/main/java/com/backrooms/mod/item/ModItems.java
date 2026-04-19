@@ -15,17 +15,20 @@ public class ModItems {
     public static final Item BACKROOMS_WALL = new BlockItem(ModBlocks.BACKROOMS_WALL, new Item.Settings());
     public static final Item BACKROOMS_FLOOR = new BlockItem(ModBlocks.BACKROOMS_FLOOR, new Item.Settings());
     public static final Item BACKROOMS_CEILING = new BlockItem(ModBlocks.BACKROOMS_CEILING, new Item.Settings());
+    public static final Item BACKROOMS_LAMP = new BlockItem(ModBlocks.BACKROOMS_LAMP, new Item.Settings());
 
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier(BackroomsMod.MOD_ID, "backrooms_wall"), BACKROOMS_WALL);
         Registry.register(Registries.ITEM, new Identifier(BackroomsMod.MOD_ID, "backrooms_floor"), BACKROOMS_FLOOR);
         Registry.register(Registries.ITEM, new Identifier(BackroomsMod.MOD_ID, "backrooms_ceiling"), BACKROOMS_CEILING);
+        Registry.register(Registries.ITEM, new Identifier(BackroomsMod.MOD_ID, "backrooms_lamp"), BACKROOMS_LAMP);
 
         // Добавляем в креативную вкладку "Строительные блоки"
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(content -> {
             content.add(BACKROOMS_WALL);
             content.add(BACKROOMS_FLOOR);
             content.add(BACKROOMS_CEILING);
+            content.add(BACKROOMS_LAMP);
         });
     }
 }

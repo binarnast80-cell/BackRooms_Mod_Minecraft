@@ -2,7 +2,9 @@
     "block.backrooms.backrooms_wall": "Стена Закулисья",
     "block.backrooms.backrooms_floor": "Пол Закулисья",
     "block.backrooms.backrooms_ceiling": "Потолок Закулисья",
+    "block.backrooms.backrooms_lamp": "Лампа Закулисья",
     "entity.backrooms.lurker": "Скрытень",
     "entity.backrooms.howler": "Воющий",
+    "entity.backrooms.mimic": "Мимик",
     "itemGroup.backrooms": "Закулисье"
 }

@@ -1,0 +1,12 @@
+{
+    "required": true,
+    "minVersion": "0.8.5",
+    "package": "com.backrooms.mod.mixin",
+    "compatibilityLevel": "JAVA_17",
+    "client": [
+        "BackroomsFogMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

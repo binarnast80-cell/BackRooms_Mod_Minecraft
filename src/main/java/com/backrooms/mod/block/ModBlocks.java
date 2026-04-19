@@ -26,12 +26,20 @@ public class ModBlocks {
                     .dropsNothing()
     );
 
-    // Потолок Backrooms — НЕУЯЗВИМ + светится (уровень света 12)
+    // Потолок Backrooms — ТЁМНЫЙ, без свечения. Текстура потолочных плит.
     public static final Block BACKROOMS_CEILING = new Block(
             FabricBlockSettings.create()
                     .strength(-1.0f, 3600000.0f)
+                    .sounds(BlockSoundGroup.STONE)
+                    .dropsNothing()
+    );
+
+    // Лампа Backrooms — тусклый неоновый блок. Свет=7 (из 15) для глубоких теней.
+    public static final Block BACKROOMS_LAMP = new Block(
+            FabricBlockSettings.create()
+                    .strength(-1.0f, 3600000.0f)
                     .sounds(BlockSoundGroup.GLASS)
-                    .luminance(state -> 12)
+                    .luminance(state -> 7)
                     .dropsNothing()
     );
 
@@ -39,5 +47,6 @@ public class ModBlocks {
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_wall"), BACKROOMS_WALL);
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_floor"), BACKROOMS_FLOOR);
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_ceiling"), BACKROOMS_CEILING);
+        Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_lamp"), BACKROOMS_LAMP);
     }
 }
