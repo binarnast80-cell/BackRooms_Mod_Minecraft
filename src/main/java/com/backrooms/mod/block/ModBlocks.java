@@ -101,25 +101,22 @@ public class ModBlocks {
                     .jumpVelocityMultiplier(0.8f)
     );
 
+    // Лампа Backrooms — тусклый неоновый блок. Свет=7 (из 15) для глубоких теней.
+    public static final Block BACKROOMS_LAMP = new Block(
+            FabricBlockSettings.create()
+                    .strength(-1.0f, 3600000.0f)
+                    .sounds(BlockSoundGroup.GLASS)
+                    .luminance(state -> 7)
+                    .dropsNothing()
+    );
+
     public static void register() {
         // Регистрация блоков
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_wall"), BACKROOMS_WALL);
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_floor"), BACKROOMS_FLOOR);
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_ceiling"), BACKROOMS_CEILING);
+        Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_lamp"), BACKROOMS_LAMP);
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "soggy_wall"), SOGGY_WALL);
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "green_wallpaper"), GREEN_WALLPAPER);
-
-        // Регистрация BlockItem для green_wallpaper
-        Registry.register(Registries.ITEM, new Identifier(BackroomsMod.MOD_ID, "green_wallpaper"),
-                new BlockItem(GREEN_WALLPAPER, new Item.Settings()));
-
-        // Добавление в группу строительных блоков
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(entries -> {
-            entries.add(BACKROOMS_WALL);
-            entries.add(BACKROOMS_FLOOR);
-            entries.add(BACKROOMS_CEILING);
-            entries.add(GREEN_WALLPAPER);
-            entries.add(SOGGY_WALL);
-        });
     }
 }
