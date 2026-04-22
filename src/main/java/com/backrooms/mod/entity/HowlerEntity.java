@@ -1,11 +1,13 @@
 package com.backrooms.mod.entity;
 
+import com.backrooms.mod.sound.ModSounds;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
 
 /**
@@ -44,5 +46,20 @@ public class HowlerEntity extends HostileEntity {
     @Override
     public boolean canImmediatelyDespawn(double distanceSquared) {
         return false;
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.HOWLER_CRY;
+    }
+
+    @Override
+    protected SoundEvent getHurtSound() {
+        return ModSounds.HOWLER_CRY;
+    }
+
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.HOWLER_CRY;
     }
 }

@@ -2,6 +2,8 @@ package com.backrooms.mod;
 
 import com.backrooms.mod.client.BackroomsAmbientSound;
 import com.backrooms.mod.client.BackroomsOverlay;
+import com.backrooms.mod.client.BackroomsScarySounds;
+import com.backrooms.mod.client.BackroomsScarySounds;
 import com.backrooms.mod.entity.ModEntities;
 import com.backrooms.mod.entity.client.HowlerRenderer;
 import com.backrooms.mod.entity.client.LurkerModel;

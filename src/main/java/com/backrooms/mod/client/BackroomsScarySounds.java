@@ -19,10 +19,11 @@ public class BackroomsScarySounds {
         ModSounds.SCARY_WHISPER,
         ModSounds.SCARY_SOUND,
         ModSounds.SCARY_FOOTSTEPS,
-        ModSounds.SCARY_BREATH
+        ModSounds.SCARY_BREATH,
+        ModSounds.HOWLER_CRY
     };
 
-    private static final float PLAY_CHANCE = 0.001f; // Вероятность воспроизведения на тик (очень низкая)
+    private static final float PLAY_CHANCE = 0.005f; // Вероятность воспроизведения на тик (увеличена для более частых звуков)
 
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

@@ -16,6 +16,14 @@ public class ModSounds {
     public static final Identifier HOWLER_CRY_ID = new Identifier(BackroomsMod.MOD_ID, "howler_cry");
     public static final SoundEvent HOWLER_CRY = SoundEvent.of(HOWLER_CRY_ID);
 
+    // Звук Lurker (крик)
+    public static final Identifier LURKER_CRY_ID = new Identifier(BackroomsMod.MOD_ID, "lurker_cry");
+    public static final SoundEvent LURKER_CRY = SoundEvent.of(LURKER_CRY_ID);
+
+    // Звук Mimic (крик)
+    public static final Identifier MIMIC_CRY_ID = new Identifier(BackroomsMod.MOD_ID, "mimic_cry");
+    public static final SoundEvent MIMIC_CRY = SoundEvent.of(MIMIC_CRY_ID);
+
     // Страшные звуки
     public static final Identifier SCARY_WHISPER_ID = new Identifier(BackroomsMod.MOD_ID, "scary_whisper");
     public static final SoundEvent SCARY_WHISPER = SoundEvent.of(SCARY_WHISPER_ID);
@@ -32,6 +40,8 @@ public class ModSounds {
     public static void register() {
         Registry.register(Registries.SOUND_EVENT, BACKROOMS_SOUND_ID, BACKROOMS_SOUND);
         Registry.register(Registries.SOUND_EVENT, HOWLER_CRY_ID, HOWLER_CRY);
+        Registry.register(Registries.SOUND_EVENT, LURKER_CRY_ID, LURKER_CRY);
+        Registry.register(Registries.SOUND_EVENT, MIMIC_CRY_ID, MIMIC_CRY);
         Registry.register(Registries.SOUND_EVENT, SCARY_WHISPER_ID, SCARY_WHISPER);
         Registry.register(Registries.SOUND_EVENT, SCARY_SOUND_ID, SCARY_SOUND);
         Registry.register(Registries.SOUND_EVENT, SCARY_FOOTSTEPS_ID, SCARY_FOOTSTEPS);
