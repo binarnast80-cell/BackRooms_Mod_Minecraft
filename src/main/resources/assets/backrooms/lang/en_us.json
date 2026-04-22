@@ -6,5 +6,11 @@
     "entity.backrooms.lurker": "Lurker",
     "entity.backrooms.howler": "Howler",
     "entity.backrooms.mimic": "Mimic",
-    "itemGroup.backrooms": "Backrooms"
+    "itemGroup.backrooms": "Backrooms",
+    "subtitles.backrooms.ambient": "Eerie ambiance",
+    "subtitles.backrooms.howler_cry": "Howler cries",
+    "subtitles.backrooms.scary_whisper": "Whispering voices",
+    "subtitles.backrooms.scary_sound": "Distant scary sound",
+    "subtitles.backrooms.scary_footsteps": "Creepy footsteps",
+    "subtitles.backrooms.scary_breath": "Heavy breathing"
 }

@@ -1,18 +1,9 @@
 {
-    "lamp_hum": {
-        "subtitle": "subtitles.backrooms.lamp_hum",
-        "sounds": [
-            {
-                "name": "backrooms:lamp_hum",
-                "stream": true
-            }
-        ]
-    },
-    "ambient_backrooms": {
+    "backrooms_sound": {
         "subtitle": "subtitles.backrooms.ambient",
         "sounds": [
             {
-                "name": "backrooms:ambient_backrooms",
+                "name": "backrooms:backrooms_sound",
                 "stream": true
             }
         ]
@@ -23,6 +14,38 @@
             {
                 "name": "backrooms:howler_cry",
                 "stream": true
+            }
+        ]
+    },
+    "scary_whisper": {
+        "subtitle": "subtitles.backrooms.scary_whisper",
+        "sounds": [
+            {
+                "name": "backrooms:scary_whisper"
+            }
+        ]
+    },
+    "scary_sound": {
+        "subtitle": "subtitles.backrooms.scary_sound",
+        "sounds": [
+            {
+                "name": "backrooms:scary_sound"
+            }
+        ]
+    },
+    "scary_footsteps": {
+        "subtitle": "subtitles.backrooms.scary_footsteps",
+        "sounds": [
+            {
+                "name": "backrooms:scary_footsteps"
+            }
+        ]
+    },
+    "scary_breath": {
+        "subtitle": "subtitles.backrooms.scary_breath",
+        "sounds": [
+            {
+                "name": "backrooms:scary_breath"
             }
         ]
     }

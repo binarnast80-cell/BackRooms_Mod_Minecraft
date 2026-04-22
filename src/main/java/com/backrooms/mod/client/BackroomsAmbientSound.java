@@ -12,13 +12,12 @@ import net.minecraft.util.math.random.Random;
 
 /**
  * Управление зацикленными звуками эмбиента в Backrooms.
- * Автоматически запускает гул ламп и жуткий эмбиент,
+ * Автоматически запускает жуткий эмбиент (включая гул ламп),
  * когда игрок находится в измерении Backrooms.
  */
 public class BackroomsAmbientSound {
 
     private static boolean isPlaying = false;
-    private static BackroomsLoopSound lampHumSound = null;
     private static BackroomsLoopSound ambientSound = null;
 
     public static void register() {
@@ -41,20 +40,14 @@ public class BackroomsAmbientSound {
     private static void startSounds(MinecraftClient client) {
         if (client.player == null) return;
 
-        lampHumSound = new BackroomsLoopSound(client.player, ModSounds.LAMP_HUM, 0.3f, true);
-        ambientSound = new BackroomsLoopSound(client.player, ModSounds.AMBIENT_BACKROOMS, 0.5f, true);
+        ambientSound = new BackroomsLoopSound(client.player, ModSounds.BACKROOMS_SOUND, 0.5f, true);
 
-        client.getSoundManager().play(lampHumSound);
         client.getSoundManager().play(ambientSound);
 
         isPlaying = true;
     }
 
     private static void stopSounds(MinecraftClient client) {
-        if (lampHumSound != null) {
-            client.getSoundManager().stop(lampHumSound);
-            lampHumSound = null;
-        }
         if (ambientSound != null) {
             client.getSoundManager().stop(ambientSound);
             ambientSound = null;

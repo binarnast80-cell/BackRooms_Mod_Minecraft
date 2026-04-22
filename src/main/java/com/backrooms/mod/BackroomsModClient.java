@@ -18,6 +18,7 @@ public class BackroomsModClient implements ClientModInitializer {
         ModNetworking.registerS2CPackets();
         BackroomsOverlay.register();
         BackroomsAmbientSound.register();
+        BackroomsScarySounds.register();
 
         // Регистрация кастомной модели Lurker из Blockbench
         EntityModelLayerRegistry.registerModelLayer(LurkerModel.LAYER, LurkerModel::getTexturedModelData);

@@ -6,5 +6,11 @@
     "entity.backrooms.lurker": "Скрытень",
     "entity.backrooms.howler": "Воющий",
     "entity.backrooms.mimic": "Мимик",
-    "itemGroup.backrooms": "Закулисье"
+    "itemGroup.backrooms": "Закулисье",
+    "subtitles.backrooms.ambient": "Жуткая атмосфера",
+    "subtitles.backrooms.howler_cry": "Воющий кричит",
+    "subtitles.backrooms.scary_whisper": "Шепчущие голоса",
+    "subtitles.backrooms.scary_sound": "Далекий страшный звук",
+    "subtitles.backrooms.scary_footsteps": "Жуткие шаги",
+    "subtitles.backrooms.scary_breath": "Тяжелое дыхание"
 }
