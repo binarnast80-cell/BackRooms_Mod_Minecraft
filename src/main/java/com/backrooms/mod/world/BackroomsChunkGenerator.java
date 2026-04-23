@@ -128,7 +128,7 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
                 if (isWall(wx, wz)) continue;      // Нам нужен пустой блок воздуха рядом со стеной
                 
                 long torchHash = mixHash(WORLD_SEED + 999, wx * 131L, wz * 137L);
-                if (Math.abs(torchHash) % 100 < 2) { // 2% шанс для свободного блока
+                if (Math.abs(torchHash) % 1000 < 2) { // 0.2% шанс (очень редко)
                     net.minecraft.util.math.Direction dir = null;
                     if (isWall(wx - 1, wz)) dir = net.minecraft.util.math.Direction.EAST;
                     else if (isWall(wx + 1, wz)) dir = net.minecraft.util.math.Direction.WEST;
@@ -448,6 +448,11 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
 
             // Проверяем что координата — внутри лабиринта (не стена, не столб)
             if (isWall(x, z)) {
+                continue;
+            }
+
+            // СТРОГО: Деревянный сталкер спавнится ТОЛЬКО в зараженной зоне
+            if (type == com.backrooms.mod.entity.ModEntities.WOODEN_STALKER && !isInfected(x, z)) {
                 continue;
             }
 
