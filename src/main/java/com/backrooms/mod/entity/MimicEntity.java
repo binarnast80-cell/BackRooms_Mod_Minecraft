@@ -220,15 +220,39 @@ public class MimicEntity extends HostileEntity {
 
         // ── Принятие решения о движении ──────────────────────────────────────
 
-        if (playerLooksAtMe) {
-            // ЗАМИРАЕМ — игрок смотрит прямо на нас (SCP-механика)
-            this.getNavigation().stop();
-            this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 60.0f, 60.0f);
-
-        } else {
-            // Если игрок не смотрит — 100% преследует
+        if (!playerLooksAtMe) {
+            // Если игрок НЕ смотрит — 100% преследует на высокой скорости
             this.getNavigation().startMovingTo(player, SPEED_HUNT);
             this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 30.0f, 30.0f);
+
+        } else {
+            // Если игрок СМОТРИТ — включается криповая логика: наблюдает, отходит, копирует
+            if (dist < STALK_MIN) {
+                // Слишком близко — отступаем назад, сохраняя взгляд на игрока
+                Vec3d away = this.getPos().subtract(player.getPos()).normalize();
+                this.getNavigation().startMovingTo(
+                        this.getX() + away.x * 6, this.getY(), this.getZ() + away.z * 6,
+                        SPEED_STALK);
+                this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 30.0f, 30.0f);
+
+            } else if (dist < COPY_RANGE) {
+                // В зоне копирования — повторяем движения игрока с задержкой
+                followCopiedMovement();
+                this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 30.0f, 30.0f);
+
+            } else if (dist > STALK_IDEAL) {
+                // Далеко — медленно приближаемся
+                this.getNavigation().startMovingTo(player, SPEED_STALK);
+                this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 20.0f, 20.0f);
+
+            } else {
+                // В идеальной зоне (STALK_MIN ... STALK_IDEAL) — стоим, наблюдаем
+                this.getNavigation().stop();
+                this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 30.0f, 30.0f);
+            }
+
+            // Засада: может телепортироваться за спину в любой момент
+            tryAmbush(player);
         }
     }
 
@@ -343,7 +367,7 @@ public class MimicEntity extends HostileEntity {
      */
     private void tryAmbush(PlayerEntity player) {
         if (ambushTimer > 0) return;
-        if (isPlayerLookingAtMimic(player)) return;
+        // Разрешаем телепортацию даже если игрок смотрит (по просьбе)
         if (this.random.nextFloat() > 0.04f) return; // 4% шанс каждый тик
 
         Vec3d lookDir = player.getRotationVector();
