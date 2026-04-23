@@ -1,11 +1,14 @@
 package com.backrooms.mod.mixin;
 
+import com.backrooms.mod.world.BackroomsChunkGenerator;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BackgroundRenderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.CameraSubmersionType;
+import net.minecraft.client.render.FogShape;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -37,9 +40,17 @@ public class BackroomsFogMixin {
         Identifier dimId = world.getRegistryKey().getValue();
         if (!dimId.getNamespace().equals("backrooms")) return;
 
-        // Тёплый жёлтый: #C4A86A
-        // R=196/255=0.769, G=168/255=0.659, B=106/255=0.416
-        RenderSystem.clearColor(0.769f, 0.659f, 0.416f, 1.0f);
+        // Плавное вычисление цвета:
+        // Обычные стены (inf < 0.45): #C4A86A (0.769, 0.659, 0.416)
+        // Зараженная зона дерева (inf > 0.65): Тёмно-коричневый (0.35, 0.25, 0.15)
+        double inf = BackroomsChunkGenerator.getInfectionValue((int)camera.getPos().x, (int)camera.getPos().z);
+        float t = MathHelper.clamp((float) ((inf - 0.45) / 0.20), 0.0f, 1.0f);
+        
+        float r = MathHelper.lerp(t, 0.769f, 0.350f);
+        float g = MathHelper.lerp(t, 0.659f, 0.250f);
+        float b = MathHelper.lerp(t, 0.416f, 0.150f);
+
+        RenderSystem.clearColor(r, g, b, 1.0f);
     }
 
     /**
@@ -59,8 +70,11 @@ public class BackroomsFogMixin {
 
         if (camera.getSubmersionType() != CameraSubmersionType.NONE) return;
 
-        // Мягкий плавный туман: чёткость до 10 блоков, blur с 10 до 28
-        RenderSystem.setShaderFogStart(10.0f);
-        RenderSystem.setShaderFogEnd(28.0f);
+        // Делаем туман цилиндрическим (убирает эффект черной сферы вдалеке)
+        RenderSystem.setShaderFogShape(FogShape.CYLINDER);
+
+        // Мягкий плавный туман: чёткость до 15 блоков, blur с 15 до 35
+        RenderSystem.setShaderFogStart(15.0f);
+        RenderSystem.setShaderFogEnd(35.0f);
     }
 }

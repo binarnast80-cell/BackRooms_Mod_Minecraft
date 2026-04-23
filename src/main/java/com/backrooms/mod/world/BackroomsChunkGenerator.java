@@ -49,11 +49,12 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
             BiomeSource.CODEC.fieldOf("biome_source").forGetter(ChunkGenerator::getBiomeSource))
             .apply(instance, BackroomsChunkGenerator::new));
 
-    // Высоты — потолок поднят до 5 блоков
-    private static final int FLOOR_Y = 0;
-    private static final int WALL_MIN_Y = 1;
-    private static final int WALL_MAX_Y = 5; // 5 блоков высота стен
-    private static final int CEILING_Y = 6; // Потолок на Y=6
+    // ======================== НАСТРОЙКИ ГЕНЕРАЦИИ ========================
+    // Поднимаем лабиринт на Y=100, чтобы уместить 100 блоков досок снизу
+    private static final int FLOOR_Y = 100;
+    private static final int WALL_MIN_Y = 101;
+    private static final int WALL_MAX_Y = 105; // 5 блоков высота стен
+    private static final int CEILING_Y = 106; // Потолок на Y=106
 
     private static final long WORLD_SEED = 48291537L;
 
@@ -102,6 +103,17 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
                 // Стены или воздух
                 for (int y = WALL_MIN_Y; y <= WALL_MAX_Y; y++) {
                     chunk.setBlockState(mutable.set(lx, y, lz), wall ? currentWall : airState, false);
+                }
+
+                // 100 блоков досок под полом (от 0 до FLOOR_Y - 1)
+                BlockState plankState = Blocks.OAK_PLANKS.getDefaultState();
+                for (int y = 0; y < FLOOR_Y; y++) {
+                    chunk.setBlockState(mutable.set(lx, y, lz), plankState, false);
+                }
+
+                // 100 блоков досок над потолком (от CEILING_Y + 1 до 206)
+                for (int y = CEILING_Y + 1; y <= 206; y++) {
+                    chunk.setBlockState(mutable.set(lx, y, lz), plankState, false);
                 }
             }
         }
@@ -322,25 +334,23 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
 
     // ======================== ГЕНЕРАЦИЯ ЗАРАЖЕННОЙ ЗОНЫ ========================
 
-    private boolean isInfected(int wx, int wz) {
+    public static double getInfectionValue(int wx, int wz) {
         // Базовый шум, масштаб 100 блоков (определяет общую форму зоны)
         double baseNoise = simpleNoise(wx / 100.0, wz / 100.0, WORLD_SEED + 500);
         
         // Красивый "комковатый" высокочастотный шум для эффекта смешивания (масштаб 3.5 блока)
-        // Это создаст органичные пятна на границе, а не просто телевизионный пиксельный шум
         double detailNoise = simpleNoise(wx / 3.5, wz / 3.5, WORLD_SEED + 501); 
         
-        // Чтобы переходник был СТРОГО от 10 до 20 блоков:
-        // Градиент baseNoise (при масштабе 100) равен примерно 0.01-0.015 на блок.
         // Умножая detailNoise на 0.16, мы создаем зону смешивания (дельта 0.16).
-        // В блоках это даст ровно ~10-15 блоков переходной зоны.
-        double combined = baseNoise + (detailNoise - 0.5) * 0.16;
-        
-        // Если итоговое значение > 0.6 — это деревянная зона
-        return combined > 0.6;
+        return baseNoise + (detailNoise - 0.5) * 0.16;
     }
 
-    private double simpleNoise(double x, double z, long seed) {
+    public static boolean isInfected(int wx, int wz) {
+        // Если итоговое значение > 0.6 — это деревянная зона
+        return getInfectionValue(wx, wz) > 0.6;
+    }
+
+    public static double simpleNoise(double x, double z, long seed) {
         int ix = (int) Math.floor(x);
         int iz = (int) Math.floor(z);
         double fx = x - ix;
@@ -361,7 +371,7 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         return i1 + uz * (i2 - i1);
     }
 
-    private double hashNoiseLocal(int x, int z, long seed) {
+    public static double hashNoiseLocal(int x, int z, long seed) {
         long h = mixHash(seed, (long) x, (long) z);
         return (double) (Math.abs(h) % 10000) / 10000.0;
     }
@@ -448,12 +458,17 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
 
     @Override
     public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
-        BlockState[] states = new BlockState[CEILING_Y + 1];
+        BlockState[] states = new BlockState[207]; // До 206 Y (включительно)
         boolean infected = isInfected(x, z);
         
         BlockState currentFloor = infected ? Blocks.OAK_PLANKS.getDefaultState() : ModBlocks.BACKROOMS_FLOOR.getDefaultState();
         BlockState currentWall = infected ? Blocks.OAK_PLANKS.getDefaultState() : ModBlocks.BACKROOMS_WALL.getDefaultState();
         BlockState currentCeiling = infected ? Blocks.OAK_PLANKS.getDefaultState() : ModBlocks.BACKROOMS_CEILING.getDefaultState();
+        BlockState plankState = Blocks.OAK_PLANKS.getDefaultState();
+
+        for (int y = 0; y < FLOOR_Y; y++) {
+            states[y] = plankState;
+        }
 
         states[FLOOR_Y] = currentFloor;
         boolean wall = isWall(x, z);
@@ -461,6 +476,11 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
             states[y] = wall ? currentWall : Blocks.AIR.getDefaultState();
         }
         states[CEILING_Y] = currentCeiling;
+
+        for (int y = CEILING_Y + 1; y <= 206; y++) {
+            states[y] = plankState;
+        }
+
         return new VerticalBlockSample(0, states);
     }
 
@@ -482,7 +502,7 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
 
     @Override
     public int getWorldHeight() {
-        return 64;
+        return 256;
     }
 
     @Override

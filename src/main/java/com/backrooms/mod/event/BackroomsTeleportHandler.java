@@ -123,7 +123,7 @@ public class BackroomsTeleportHandler {
         }
 
         double spawnX = 3.5;
-        double spawnY = 1.0;
+        double spawnY = 101.0; // Смещено с 1 на 101 из-за 100 блоков досок внизу
         double spawnZ = 3.5;
 
         player.teleport(backroomsWorld, spawnX, spawnY, spawnZ, player.getYaw(), player.getPitch());
@@ -140,21 +140,21 @@ public class BackroomsTeleportHandler {
             int x = (int) Math.floor(rx);
             int z = (int) Math.floor(rz);
 
-            // Safe check: floor is backrooms_floor, Y=1 and Y=2 are air
-            BlockPos floor = new BlockPos(x, 0, z);
-            BlockPos feet = new BlockPos(x, 1, z);
-            BlockPos head = new BlockPos(x, 2, z);
+            // Safe check: floor is backrooms_floor, Y=101 and Y=102 are air
+            BlockPos floor = new BlockPos(x, 100, z);
+            BlockPos feet = new BlockPos(x, 101, z);
+            BlockPos head = new BlockPos(x, 102, z);
 
             if (world.getBlockState(floor).isOf(ModBlocks.BACKROOMS_FLOOR) &&
                 world.getBlockState(feet).isAir() &&
                 world.getBlockState(head).isAir()) {
 
-                player.teleport(world, rx, 1.0, rz, player.getYaw(), player.getPitch());
+                player.teleport(world, rx, 101.0, rz, player.getYaw(), player.getPitch());
                 return;
             }
         }
 
-        // Fallback: spawn at original death pos but Y=1
-        player.teleport(world, startX, 1.0, startZ, player.getYaw(), player.getPitch());
+        // Fallback: spawn at original death pos but Y=101
+        player.teleport(world, startX, 101.0, startZ, player.getYaw(), player.getPitch());
     }
 }
