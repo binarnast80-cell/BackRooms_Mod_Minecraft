@@ -1,12 +1,404 @@
 {
-    "variants": {
-        "density=0": { "model": "backrooms:block/black_mold_0" },
-        "density=1": { "model": "backrooms:block/black_mold_1" },
-        "density=2": { "model": "backrooms:block/black_mold_2" },
-        "density=3": { "model": "backrooms:block/black_mold_3" },
-        "density=4": { "model": "backrooms:block/black_mold_4" },
-        "density=5": { "model": "backrooms:block/black_mold_5" },
-        "density=6": { "model": "backrooms:block/black_mold_6" },
-        "density=7": { "model": "backrooms:block/black_mold_7" }
-    }
+  "variants": {
+    "density=0": [
+      {
+        "model": "backrooms:block/black_mold_0_v0"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v1"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v2"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v3"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v4"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v5"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v6"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v7"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v8"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v9"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v10"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v11"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v12"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v13"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v14"
+      },
+      {
+        "model": "backrooms:block/black_mold_0_v15"
+      }
+    ],
+    "density=1": [
+      {
+        "model": "backrooms:block/black_mold_1_v0"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v1"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v2"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v3"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v4"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v5"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v6"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v7"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v8"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v9"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v10"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v11"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v12"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v13"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v14"
+      },
+      {
+        "model": "backrooms:block/black_mold_1_v15"
+      }
+    ],
+    "density=2": [
+      {
+        "model": "backrooms:block/black_mold_2_v0"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v1"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v2"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v3"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v4"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v5"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v6"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v7"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v8"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v9"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v10"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v11"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v12"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v13"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v14"
+      },
+      {
+        "model": "backrooms:block/black_mold_2_v15"
+      }
+    ],
+    "density=3": [
+      {
+        "model": "backrooms:block/black_mold_3_v0"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v1"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v2"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v3"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v4"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v5"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v6"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v7"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v8"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v9"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v10"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v11"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v12"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v13"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v14"
+      },
+      {
+        "model": "backrooms:block/black_mold_3_v15"
+      }
+    ],
+    "density=4": [
+      {
+        "model": "backrooms:block/black_mold_4_v0"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v1"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v2"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v3"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v4"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v5"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v6"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v7"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v8"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v9"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v10"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v11"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v12"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v13"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v14"
+      },
+      {
+        "model": "backrooms:block/black_mold_4_v15"
+      }
+    ],
+    "density=5": [
+      {
+        "model": "backrooms:block/black_mold_5_v0"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v1"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v2"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v3"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v4"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v5"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v6"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v7"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v8"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v9"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v10"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v11"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v12"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v13"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v14"
+      },
+      {
+        "model": "backrooms:block/black_mold_5_v15"
+      }
+    ],
+    "density=6": [
+      {
+        "model": "backrooms:block/black_mold_6_v0"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v1"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v2"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v3"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v4"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v5"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v6"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v7"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v8"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v9"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v10"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v11"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v12"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v13"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v14"
+      },
+      {
+        "model": "backrooms:block/black_mold_6_v15"
+      }
+    ],
+    "density=7": [
+      {
+        "model": "backrooms:block/black_mold_7_v0"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v1"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v2"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v3"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v4"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v5"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v6"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v7"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v8"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v9"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v10"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v11"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v12"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v13"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v14"
+      },
+      {
+        "model": "backrooms:block/black_mold_7_v15"
+      }
+    ]
+  }
 }
