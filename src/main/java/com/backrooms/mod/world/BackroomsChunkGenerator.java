@@ -84,18 +84,24 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
                 int wx = startX + lx;
                 int wz = startZ + lz;
 
-                // Пол (неуязвимый)
-                chunk.setBlockState(mutable.set(lx, FLOOR_Y, lz), floorState, false);
+                // Проверка на Зараженную зону (доски)
+                boolean infected = isInfected(wx, wz);
+                BlockState currentFloor = infected ? Blocks.OAK_PLANKS.getDefaultState() : floorState;
+                BlockState currentWall = infected ? Blocks.OAK_PLANKS.getDefaultState() : wallState;
+                BlockState currentCeiling = infected ? Blocks.OAK_PLANKS.getDefaultState() : ceilingState;
 
-                // Потолок: тёмный по умолчанию, лампы — редко, по 2 в ряд
+                // Пол
+                chunk.setBlockState(mutable.set(lx, FLOOR_Y, lz), currentFloor, false);
+
+                // Потолок (в зараженной зоне ламп нет)
                 boolean wall = isWall(wx, wz);
-                boolean isLamp = !wall && isLampPosition(wx, wz);
+                boolean isLamp = !infected && !wall && isLampPosition(wx, wz);
                 chunk.setBlockState(mutable.set(lx, CEILING_Y, lz),
-                        isLamp ? lampState : ceilingState, false);
+                        isLamp ? lampState : currentCeiling, false);
 
                 // Стены или воздух
                 for (int y = WALL_MIN_Y; y <= WALL_MAX_Y; y++) {
-                    chunk.setBlockState(mutable.set(lx, y, lz), wall ? wallState : airState, false);
+                    chunk.setBlockState(mutable.set(lx, y, lz), wall ? currentWall : airState, false);
                 }
             }
         }
@@ -314,6 +320,49 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         return h ^ (h >>> 31);
     }
 
+    // ======================== ГЕНЕРАЦИЯ ЗАРАЖЕННОЙ ЗОНЫ ========================
+
+    private boolean isInfected(int wx, int wz) {
+        // Базовый плавный шум (масштаб ~80 блоков)
+        double baseNoise = simpleNoise(wx / 80.0, wz / 80.0, WORLD_SEED + 500);
+        
+        // Высокочастотный шум для эффекта смешивания (dithering) на границах
+        double detailNoise = hashNoiseLocal(wx, wz, WORLD_SEED + 501); 
+        
+        // baseNoise меняется плавно от 0 до 1.
+        // Смешиваем их так, чтобы граница была "рваной"
+        double combined = baseNoise + (detailNoise - 0.5) * 0.3;
+        
+        // Если значение > 0.65 — это деревянная зона
+        return combined > 0.65;
+    }
+
+    private double simpleNoise(double x, double z, long seed) {
+        int ix = (int) Math.floor(x);
+        int iz = (int) Math.floor(z);
+        double fx = x - ix;
+        double fz = z - iz;
+
+        // Плавная интерполяция
+        double ux = fx * fx * (3.0 - 2.0 * fx);
+        double uz = fz * fz * (3.0 - 2.0 * fz);
+
+        double v00 = hashNoiseLocal(ix, iz, seed);
+        double v10 = hashNoiseLocal(ix + 1, iz, seed);
+        double v01 = hashNoiseLocal(ix, iz + 1, seed);
+        double v11 = hashNoiseLocal(ix + 1, iz + 1, seed);
+
+        double i1 = v00 + ux * (v10 - v00);
+        double i2 = v01 + ux * (v11 - v01);
+
+        return i1 + uz * (i2 - i1);
+    }
+
+    private double hashNoiseLocal(int x, int z, long seed) {
+        long h = mixHash(seed, (long) x, (long) z);
+        return (double) (Math.abs(h) % 10000) / 10000.0;
+    }
+
     // ======================== СУЩНОСТИ ========================
 
     @Override
@@ -397,12 +446,18 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
     @Override
     public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
         BlockState[] states = new BlockState[CEILING_Y + 1];
-        states[FLOOR_Y] = ModBlocks.BACKROOMS_FLOOR.getDefaultState();
+        boolean infected = isInfected(x, z);
+        
+        BlockState currentFloor = infected ? Blocks.OAK_PLANKS.getDefaultState() : ModBlocks.BACKROOMS_FLOOR.getDefaultState();
+        BlockState currentWall = infected ? Blocks.OAK_PLANKS.getDefaultState() : ModBlocks.BACKROOMS_WALL.getDefaultState();
+        BlockState currentCeiling = infected ? Blocks.OAK_PLANKS.getDefaultState() : ModBlocks.BACKROOMS_CEILING.getDefaultState();
+
+        states[FLOOR_Y] = currentFloor;
         boolean wall = isWall(x, z);
         for (int y = WALL_MIN_Y; y <= WALL_MAX_Y; y++) {
-            states[y] = wall ? ModBlocks.BACKROOMS_WALL.getDefaultState() : Blocks.AIR.getDefaultState();
+            states[y] = wall ? currentWall : Blocks.AIR.getDefaultState();
         }
-        states[CEILING_Y] = ModBlocks.BACKROOMS_CEILING.getDefaultState();
+        states[CEILING_Y] = currentCeiling;
         return new VerticalBlockSample(0, states);
     }
 
