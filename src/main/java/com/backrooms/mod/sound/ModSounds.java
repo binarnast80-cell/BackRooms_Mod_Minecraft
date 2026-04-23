@@ -12,6 +12,10 @@ public class ModSounds {
     public static final Identifier BACKROOMS_SOUND_ID = new Identifier(BackroomsMod.MOD_ID, "backrooms_sound");
     public static final SoundEvent BACKROOMS_SOUND = SoundEvent.of(BACKROOMS_SOUND_ID);
 
+    // Локальный гул от конкретной лампы
+    public static final Identifier LAMP_HUM_ID = new Identifier(BackroomsMod.MOD_ID, "lamp_hum");
+    public static final SoundEvent LAMP_HUM = SoundEvent.of(LAMP_HUM_ID);
+
     // Звук Howler (крик)
     public static final Identifier HOWLER_CRY_ID = new Identifier(BackroomsMod.MOD_ID, "howler_cry");
     public static final SoundEvent HOWLER_CRY = SoundEvent.of(HOWLER_CRY_ID);
@@ -39,6 +43,7 @@ public class ModSounds {
 
     public static void register() {
         Registry.register(Registries.SOUND_EVENT, BACKROOMS_SOUND_ID, BACKROOMS_SOUND);
+        Registry.register(Registries.SOUND_EVENT, LAMP_HUM_ID, LAMP_HUM);
         Registry.register(Registries.SOUND_EVENT, HOWLER_CRY_ID, HOWLER_CRY);
         Registry.register(Registries.SOUND_EVENT, LURKER_CRY_ID, LURKER_CRY);
         Registry.register(Registries.SOUND_EVENT, MIMIC_CRY_ID, MIMIC_CRY);

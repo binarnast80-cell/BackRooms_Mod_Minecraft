@@ -19,6 +19,7 @@ public class BackroomsAmbientSound {
 
     private static boolean isPlaying = false;
     private static BackroomsLoopSound ambientSound = null;
+    private static DynamicLampSound lampSound = null;
 
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
@@ -41,8 +42,10 @@ public class BackroomsAmbientSound {
         if (client.player == null) return;
 
         ambientSound = new BackroomsLoopSound(client.player, ModSounds.BACKROOMS_SOUND, 0.5f, true);
+        lampSound = new DynamicLampSound(client.player, ModSounds.LAMP_HUM, true);
 
         client.getSoundManager().play(ambientSound);
+        client.getSoundManager().play(lampSound);
 
         isPlaying = true;
     }
@@ -52,17 +55,20 @@ public class BackroomsAmbientSound {
             client.getSoundManager().stop(ambientSound);
             ambientSound = null;
         }
+        if (lampSound != null) {
+            client.getSoundManager().stop(lampSound);
+            lampSound = null;
+        }
         isPlaying = false;
     }
 
     /**
-     * Зацикленный звук, привязанный к позиции игрока.
+     * Зацикленный постоянный звук для всего измерения.
      */
     private static class BackroomsLoopSound extends MovingSoundInstance {
         private final PlayerEntity player;
 
-        public BackroomsLoopSound(PlayerEntity player, net.minecraft.sound.SoundEvent sound,
-                                  float volume, boolean loop) {
+        public BackroomsLoopSound(PlayerEntity player, net.minecraft.sound.SoundEvent sound, float volume, boolean loop) {
             super(sound, SoundCategory.AMBIENT, Random.create());
             this.player = player;
             this.repeat = loop;
@@ -73,8 +79,41 @@ public class BackroomsAmbientSound {
             this.attenuationType = SoundInstance.AttenuationType.NONE;
         }
 
+        @Override
+        public void tick() {
+            if (player.isRemoved()) {
+                this.setDone();
+                return;
+            }
+            this.x = player.getX();
+            this.y = player.getY();
+            this.z = player.getZ();
+        }
+
+        @Override
+        public boolean shouldAlwaysPlay() {
+            return true;
+        }
+    }
+
+    /**
+     * Звук ламп, громкость которого зависит от дистанции до ближайшей лампы.
+     */
+    private static class DynamicLampSound extends MovingSoundInstance {
+        private final PlayerEntity player;
         private int tickCount = 0;
-        private float targetVolume = 0.5f;
+        private float targetVolume = 0.0f;
+
+        public DynamicLampSound(PlayerEntity player, net.minecraft.sound.SoundEvent sound, boolean loop) {
+            super(sound, SoundCategory.AMBIENT, Random.create());
+            this.player = player;
+            this.repeat = loop;
+            this.volume = 0.0f;
+            this.x = player.getX();
+            this.y = player.getY();
+            this.z = player.getZ();
+            this.attenuationType = SoundInstance.AttenuationType.NONE;
+        }
 
         @Override
         public void tick() {
