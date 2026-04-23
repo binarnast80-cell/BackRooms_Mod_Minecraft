@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backrooms Mod — Pitch Deck</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<nav class="nav-dots" id="navDots">
+    <button class="nav-dot active" data-slide="0" data-label="Титульный"></button>
+    <button class="nav-dot" data-slide="1" data-label="Проблема"></button>
+    <button class="nav-dot" data-slide="2" data-label="Рынок"></button>
+    <button class="nav-dot" data-slide="3" data-label="Продукт"></button>
+    <button class="nav-dot" data-slide="4" data-label="Технологии"></button>
+    <button class="nav-dot" data-slide="5" data-label="Бизнес-модель"></button>
+    <button class="nav-dot" data-slide="6" data-label="Конкуренты"></button>
+    <button class="nav-dot" data-slide="7" data-label="Маркетинг"></button>
+    <button class="nav-dot" data-slide="8" data-label="Дорожная карта"></button>
+</nav>
+<div class="slide-counter" id="slideCounter">01 / 09</div>
+
+<!-- ========== SLIDE 1: TITLE ========== -->
+<section class="slide slide--dark" id="slide-0">
+    <div class="slide-content">
+        <div class="split">
+            <div>
+                <h1 class="big-title">
+                    Meet Backrooms<br><span class="green">Minecraft Mod ↗</span>
+                </h1>
+                <p class="section-desc" style="max-width:460px;">
+                    Хоррор-мод нового поколения для Minecraft, погружающий игрока
+                    в бесконечный лабиринт «Закулисья» — с уникальными мобами,
+                    атмосферным шейдером тумана и процедурной генерацией мира.
+                    Проект создан на платформе Fabric 1.20.1 и ориентирован
+                    на коммерческий запуск через Minecraft Marketplace,
+                    CurseForge и собственный мультиплеерный сервер.
+                </p>
+            </div>
+            <div>
+                <img src="img/backrooms_dark_hallway.png" class="rounded-img" style="height:420px;" alt="Backrooms">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 2: PROBLEM ========== -->
+<section class="slide slide--light" id="slide-1">
+    <div class="slide-header slide-header-dark"><span>Pitch Deck</span><span>Backrooms</span></div>
+    <div class="slide-content">
+        <div class="cursive-label cursive-label-dark">The Problem</div>
+        <h2 class="section-title" style="color:var(--text-dark);max-width:800px;">
+            Почему Minecraft-мод,<br>а не «ИИ-анализ лица»?
+        </h2>
+        <p class="section-desc" style="color:var(--text-dark-sub);max-width:650px;">
+            Проекты с ИИ-анализом лица — это «красный океан» с высокими затратами,
+            юридическими рисками и узкой аудиторией. Minecraft-мод — это «голубой океан»
+            с миллиардной аудиторией и нулевым порогом входа. Стартапы в области машинного
+            зрения сталкиваются с GDPR, биометрическими законами, конкуренцией от Google
+            и Apple, а также потребностью в GPU-серверах стоимостью $50K+.
+        </p>
+        <table class="clean-table" style="color:var(--text-dark);border-bottom:1px solid #ddd;">
+            <thead>
+                <tr>
+                    <th style="color:var(--accent-dark);border-bottom:2px solid #ccc;">Критерий</th>
+                    <th style="color:var(--accent-dark);border-bottom:2px solid #ccc;">ИИ-проект (анализ лица)</th>
+                    <th style="color:var(--accent-dark);border-bottom:2px solid #ccc;">Backrooms Mod</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td style="font-weight:600;color:#1a1a1a;">Целевая аудитория</td><td style="color:#999;">Узкая B2B-ниша</td><td style="color:var(--accent-dark);font-weight:700;">222 млн активных игроков</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;">Порог входа</td><td style="color:#999;">Сложная интеграция API</td><td style="color:var(--accent-dark);font-weight:700;">Скачал → играй</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;">Конкуренция</td><td style="color:#999;">Сотни стартапов, Google/Apple</td><td style="color:var(--accent-dark);font-weight:700;">Уникальная ниша</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;">Виральность</td><td style="color:#999;">Минимальная</td><td style="color:var(--accent-dark);font-weight:700;">YouTube / TikTok / Twitch</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;">Регуляторные риски</td><td style="color:#999;">GDPR, биометрия, судебные иски</td><td style="color:var(--accent-dark);font-weight:700;">Отсутствуют</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;">Срок до прибыли</td><td style="color:#999;">12–24 месяца</td><td style="color:var(--accent-dark);font-weight:700;">1–3 месяца</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;">Масштабируемость</td><td style="color:#999;">ML-серверы, GPU, облако</td><td style="color:var(--accent-dark);font-weight:700;">Код + текстуры, $0 затрат</td></tr>
+            </tbody>
+        </table>
+        <div class="gallery-row" style="margin-top:24px;">
+            <img src="img/backrooms_corridor.png" alt="Коридор" class="rounded-img">
+            <img src="img/backrooms_atmosphere.png" alt="Атмосфера" class="rounded-img">
+            <img src="img/minecraft_backrooms.png" alt="Minecraft" class="rounded-img">
+        </div>
+        <div style="display:flex;gap:0;justify-content:flex-start;margin-top:24px;">
+            <div style="background:var(--bg-dark);color:var(--text-white);padding:20px 32px;border-radius:12px 0 0 12px;">
+                <div style="font-size:28px;font-weight:800;color:var(--accent);">12–24 мес</div>
+                <div style="font-size:12px;opacity:.7;">средний срок до прибыли<br>у ИИ-стартапов с нуля.</div>
+            </div>
+            <div style="background:var(--bg-dark);color:var(--text-white);padding:20px 32px;border-radius:0 12px 12px 0;border-left:1px solid rgba(255,255,255,.1);">
+                <div style="font-size:28px;font-weight:800;color:var(--accent);">$50K+</div>
+                <div style="font-size:12px;opacity:.7;">минимальные затраты на<br>GPU-серверы и ML-данные.</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 3: MARKET ========== -->
+<section class="slide slide--dark-glow" id="slide-2">
+    <div class="slide-header"><span>Pitch Deck</span><span>Backrooms</span></div>
+    <div class="slide-content">
+        <div class="split--40-60 split">
+            <div>
+                <div class="cursive-label">Market Opportunity</div>
+                <h2 class="section-title">Растущий рынок<br>Minecraft<br>контента.</h2>
+                <div class="pill">222 млн</div>
+                <p class="section-desc">
+                    активных игроков ежемесячно и готовы
+                    платить за качественный контент. Minecraft Marketplace
+                    генерирует $140+ млн каждый квартал, а создатели
+                    уже заработали более $500 млн с момента запуска платформы.
+                    Franchise «Backrooms» набрала 75+ млн просмотров на YouTube,
+                    а фильм от студии A24 выходит 29 мая 2026 года — создавая
+                    идеальное окно для запуска нашего продукта.
+                </p>
+            </div>
+            <div>
+                <div style="display:flex;gap:1px;">
+                    <div class="stat-block-dark" style="border-radius:12px 0 0 0;">
+                        <div class="stat-big">$3B+</div>
+                        <div class="stat-sub">Общая стоимость<br>модинг-индустрии Minecraft,<br>включая серверы и контент.</div>
+                    </div>
+                    <div class="stat-block-dark" style="border-radius:0 12px 0 0;">
+                        <div class="stat-big">70%</div>
+                        <div class="stat-sub">Доля создателя в<br>Minecraft Marketplace — одна<br>из лучших ставок в индустрии.</div>
+                    </div>
+                </div>
+                <div style="margin-top:1px;">
+                    <img src="img/market_gaming.png" class="rounded-img" style="height:260px;" alt="Рынок">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 4: PRODUCT ========== -->
+<section class="slide slide--light" id="slide-3">
+    <div class="slide-header slide-header-dark"><span>Pitch Deck</span><span>Backrooms</span></div>
+    <div class="slide-content">
+        <div class="split--text-img">
+            <div>
+                <div class="cursive-label cursive-label-dark">Our Solution</div>
+                <h2 class="section-title" style="color:var(--text-dark);">Полноценный<br>хоррор-мод<br>для Minecraft.</h2>
+                <p class="section-desc" style="color:var(--text-dark-sub);">
+                    Backrooms Mod — это не очередной скин-пак. Это полноценный
+                    игровой опыт с собственным измерением, тремя уникальными мобами,
+                    кастомной процедурной генерацией мира, атмосферным шейдером тумана
+                    и продвинутым ИИ, основанным на Finite State Machine (FSM).
+                    Игрок проваливается в бесконечный лабиринт жёлтых стен,
+                    тусклых ламп и жуткой тишины — где каждый «другой игрок»
+                    может оказаться Мимиком.
+                </p>
+                <div class="info-card-light">
+                    <h4>🎮 Создание хоррор-атмосферы нового уровня</h4>
+                    <p>Мы используем кастомный Mixin-шейдер для тёплого жёлтого тумана,
+                    тусклые неоновые лампы (luminance=7), полностью тёмные потолки
+                    и ambient_light=0.0 для создания ощущения настоящего Backrooms.</p>
+                </div>
+            </div>
+            <div>
+                <img src="img/backrooms_corridor.png" class="rounded-img" style="height:280px;margin-bottom:16px;border-radius:16px;" alt="Коридор">
+                <div class="grid-2" style="gap:12px;">
+                    <div class="info-card">
+                        <h4>Мы используем Fabric API</h4>
+                        <p>Лёгкий и быстрый фреймворк с Mixin-поддержкой для глубокой интеграции шейдеров и тумана без сторонних зависимостей.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>3 уникальных моба</h4>
+                        <p>Lurker (преследователь), Howler (медленный танк с жуткими звуками), Mimic (копирует скин игрока и наблюдает из темноты).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 5: TECH / AI ========== -->
+<section class="slide slide--dark-glow" id="slide-4">
+    <div class="slide-header"><span>Pitch Deck</span><span>Backrooms</span></div>
+    <div class="slide-content">
+        <div class="split">
+            <div>
+                <div class="cursive-label">Technology</div>
+                <h2 class="section-title">ИИ уровня<br><span class="green">Alien: Isolation</span>.</h2>
+                <p class="section-desc">
+                    Наш Mimic — это не обычный моб Minecraft. Его поведение
+                    основано на Finite State Machine с 4 состояниями: IDLE,
+                    STALKING, HUNTING и ATTACKING. Он копирует скин реального
+                    игрока, запоминает его последнюю позицию, повторяет движения
+                    с задержкой 1.5 секунды и замирает при прямом взгляде
+                    (SCP-173 механика через dot-product вектора и raycast).
+                    Безопасная телепортация-засада проверяет пол, стены и воздух
+                    перед перемещением — Мимик никогда не застрянет в стене.
+                </p>
+                <p class="section-desc">
+                    Ни один существующий Backrooms-мод для Minecraft не предлагает
+                    подобный уровень ИИ. Это наше главное конкурентное преимущество,
+                    которое создаёт уникальный контент для стримеров: момент,
+                    когда игрок понимает, что «другой игрок» — это Мимик,
+                    становится вирусным клипом.
+                </p>
+            </div>
+            <div>
+                <img src="img/mimic_entity.png" class="rounded-img" style="height:320px;margin-bottom:16px;" alt="Mimic">
+                <div class="stat-strip">
+                    <div class="stat-block">
+                        <div class="stat-big">4</div>
+                        <div class="stat-sub">Состояния FSM</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-big">1.5s</div>
+                        <div class="stat-sub">Задержка копирования</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-big">1%</div>
+                        <div class="stat-sub">Шанс спавна / чанк</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 6: BUSINESS MODEL ========== -->
+<section class="slide slide--dark" id="slide-5">
+    <div class="slide-header"><span>Pitch Deck</span><span>Backrooms</span></div>
+    <div class="slide-content">
+        <div class="cursive-label">Business Model</div>
+        <h2 class="section-title">Три канала<br>монетизации.</h2>
+        <p class="section-desc" style="max-width:600px;">
+            Backrooms Mod использует гибридную модель монетизации,
+            комбинируя прямые продажи на Marketplace, пассивный доход
+            от Creator Rewards и серверную экономику. Это обеспечивает
+            диверсификацию доходов и устойчивость бизнеса даже при
+            снижении одного из каналов.
+        </p>
+        <div class="gallery-row" style="margin-top:16px;margin-bottom:24px;">
+            <img src="img/gaming_audience.png" alt="Аудитория" class="rounded-img">
+            <img src="img/content_creator.png" alt="Стример" class="rounded-img">
+        </div>
+        <div class="grid-3" style="margin-top:24px;">
+            <div class="info-card" style="border:1px solid var(--glass-border);">
+                <h4 style="color:var(--accent);">🅰️ Minecraft Marketplace</h4>
+                <p>Портирование на Bedrock Edition и продажа через официальный
+                Marketplace за 990–1340 Minecoins ($5.99–$8.99).
+                Доля создателя 70%. Доступ к 222 млн игроков.
+                Потенциал: десятки тысяч продаж в первый месяц
+                при правильном тайминге с выходом фильма A24.</p>
+            </div>
+            <div class="info-card" style="border:1px solid var(--glass-border);">
+                <h4 style="color:var(--accent);">🅱️ Контент-платформы</h4>
+                <p>Бесплатная публикация на CurseForge и Modrinth
+                с монетизацией через Creator Rewards Program (оплата
+                за каждое скачивание). Дополнительно: Patreon и Ko-fi
+                для премиум-контента — эксклюзивные уровни, новые мобы,
+                ранний доступ. Средний доход топ-модов: $2–15K/мес.</p>
+            </div>
+            <div class="info-card" style="border:1px solid var(--glass-border);">
+                <h4 style="color:var(--accent);">🅲️ Серверная модель</h4>
+                <p>Запуск собственного мультиплеерного Backrooms-сервера.
+                Монетизация через VIP-статусы, косметические предметы
+                и донаты. Мультиплеер с Мимиком создаёт уникальный
+                социальный опыт. Средний доход популярного сервера:
+                $5–30K/мес при активном комьюнити.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 7: COMPARISON ========== -->
+<section class="slide slide--light" id="slide-6">
+    <div class="slide-header slide-header-dark"><span>Pitch Deck</span><span>Backrooms</span></div>
+    <div class="slide-content">
+        <div class="cursive-label cursive-label-dark">Competitive Edge</div>
+        <h2 class="section-title" style="color:var(--text-dark);">Почему мы выигрываем<br>у конкурентов.</h2>
+        <p class="section-desc" style="color:var(--text-dark-sub);max-width:650px;">
+            Существующие Backrooms-моды для Minecraft ограничиваются простой генерацией
+            жёлтых коридоров без атмосферы, без уникального AI и без шейдеров.
+            Наш мод предлагает качественно другой уровень опыта — как разница
+            между инди-хоррором и Alien: Isolation.
+        </p>
+        <table class="clean-table" style="color:var(--text-dark);border-bottom:1px solid #ddd;">
+            <thead><tr><th style="color:var(--accent-dark);border-bottom:2px solid #ccc;">Критерий</th><th style="color:var(--accent-dark);border-bottom:2px solid #ccc;">Конкуренты</th><th style="color:var(--accent-dark);border-bottom:2px solid #ccc;">Backrooms Mod</th></tr></thead>
+            <tbody>
+                <tr><td style="font-weight:600;color:#1a1a1a;border-bottom:1px solid #eee;">Мобы</td><td style="color:#999;border-bottom:1px solid #eee;">Базовые зомби</td><td style="color:var(--accent-dark);font-weight:700;border-bottom:1px solid #eee;">3 уникальных (FSM AI)</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;border-bottom:1px solid #eee;">Мимик (копия игрока)</td><td style="color:#999;border-bottom:1px solid #eee;">Отсутствует</td><td style="color:var(--accent-dark);font-weight:700;border-bottom:1px solid #eee;">Полная копия + наблюдение</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;border-bottom:1px solid #eee;">Шейдеры / Туман</td><td style="color:#999;border-bottom:1px solid #eee;">Нет</td><td style="color:var(--accent-dark);font-weight:700;border-bottom:1px solid #eee;">Mixin + оверлей + туман</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;border-bottom:1px solid #eee;">Атмосфера</td><td style="color:#999;border-bottom:1px solid #eee;">Обычный Minecraft</td><td style="color:var(--accent-dark);font-weight:700;border-bottom:1px solid #eee;">Тусклые лампы, тёмный потолок</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;border-bottom:1px solid #eee;">SCP-механики</td><td style="color:#999;border-bottom:1px solid #eee;">Нет</td><td style="color:var(--accent-dark);font-weight:700;border-bottom:1px solid #eee;">Замирание при взгляде</td></tr>
+                <tr><td style="font-weight:600;color:#1a1a1a;">Мультиплеер</td><td style="color:#999;">Базовый</td><td style="color:var(--accent-dark);font-weight:700;">Мимик копирует реальных игроков</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ========== SLIDE 8: MARKETING ========== -->
+<section class="slide slide--dark-glow" id="slide-7">
+    <div class="slide-header"><span>Pitch Deck</span><span>Backrooms</span></div>
+    <div class="slide-content">
+        <div class="split">
+            <div>
+                <div class="cursive-label">Marketing Strategy</div>
+                <h2 class="section-title">Вирусный контент<br>с бюджетом <span class="green">$0</span>.</h2>
+                <p class="section-desc">
+                    Хоррор-контент набирает в 3–5 раз больше просмотров,
+                    чем обычный gaming. Один вирусный ролик на YouTube или TikTok
+                    с моментом «это не игрок, это Мимик!» способен принести
+                    500K+ просмотров и тысячи установок.
+                </p>
+                <p class="section-desc">
+                    Стратегия: бесплатная отправка мода 20–30 контент-креаторам
+                    с аудиторией 100K–1M подписчиков за 2–4 недели до премьеры
+                    фильма A24 «Backrooms» (29 мая 2026). Хэштег #backrooms
+                    уже имеет 15+ миллиардов просмотров на TikTok — мы подключаемся
+                    к существующей волне интереса, а не создаём её с нуля.
+                </p>
+            </div>
+            <div>
+                <img src="img/backrooms_atmosphere.png" class="rounded-img" style="height:260px;margin-bottom:16px;" alt="Атмосфера">
+                <div class="stat-strip">
+                    <div class="stat-block">
+                        <div class="stat-big">15B+</div>
+                        <div class="stat-sub">просмотров #backrooms<br>на TikTok</div>
+                    </div>
+                    <div class="stat-block">
+                        <div class="stat-big">75M+</div>
+                        <div class="stat-sub">просмотров Kane Pixels<br>на YouTube</div>
+                    </div>
+                </div>
+                <div class="clean-table" style="margin-top:16px;font-size:13px;">
+                    <table class="clean-table">
+                        <thead><tr><th>Источник</th><th>Мин./мес</th><th>Макс./мес</th></tr></thead>
+                        <tbody>
+                            <tr><td>Marketplace</td><td>$3,000</td><td class="highlight">$25,000</td></tr>
+                            <tr><td>CurseForge</td><td>$500</td><td class="highlight">$5,000</td></tr>
+                            <tr><td>Patreon</td><td>$300</td><td class="highlight">$3,000</td></tr>
+                            <tr><td>Сервер</td><td>$2,000</td><td class="highlight">$15,000</td></tr>
+                            <tr><td style="font-weight:900;color:var(--accent);">ИТОГО</td><td style="font-weight:700;">$5,800</td><td class="highlight" style="font-size:16px;">$48,000</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SLIDE 9: ROADMAP ========== -->
+<section class="slide slide--dark" id="slide-8">
+    <div class="slide-content" style="text-align:center;">
+        <div class="cursive-label">Roadmap</div>
+        <h2 class="section-title" style="margin-bottom:12px;">
+            Дорожная карта<br><span class="green">2026 года</span>.
+        </h2>
+        <p class="section-desc" style="max-width:600px;margin:0 auto 40px;text-align:center;">
+            От студенческого проекта к коммерческому продукту — за три квартала.
+            Наш план учитывает выход фильма A24, сезонность модинг-аудитории
+            и циклы обновлений Minecraft.
+        </p>
+        <div class="gallery-row" style="justify-content:center;">
+            <img src="img/roadmap_future.png" class="rounded-img" alt="Будущее">
+            <img src="img/backrooms_poolrooms.png" class="rounded-img" alt="Poolrooms — будущий Level 2">
+        </div>
+        <div class="cta-grid">
+            <div class="cta-card">
+                <div class="icon">🚀</div>
+                <h4>Q2 2026 — Запуск</h4>
+                <p>Завершение мода (звуки, полировка). Публикация на CurseForge и Modrinth.
+                Тизер-кампания за 2 недели до фильма A24 (29 мая). Отправка креаторам.</p>
+            </div>
+            <div class="cta-card">
+                <div class="icon">📱</div>
+                <h4>Q3 2026 — Масштаб</h4>
+                <p>Портирование на Bedrock Edition. Заявка в Partner Program.
+                Запуск мультиплеерного сервера. Новые уровни: Poolrooms, Level 1, Level 2.</p>
+            </div>
+            <div class="cta-card">
+                <div class="icon">💰</div>
+                <h4>Q4 2026 — Прибыль</h4>
+                <p>Публикация на Marketplace. Расширение команды (3D-художник,
+                звукорежиссёр). Лицензионные переговоры. Выход на $20K+/мес.</p>
+            </div>
+        </div>
+        <div style="margin-top:48px;">
+            <p style="font-size:20px;font-weight:700;color:var(--accent);margin-bottom:8px;">
+                «350 млн людей купили Minecraft. 75 млн смотрели Backrooms.<br>
+                Фильм от A24 выходит через месяц. Вопрос не "стоит ли это делать",<br>
+                а "почему мы ещё не начали?"»
+            </p>
+            <p style="color:var(--text-muted);font-size:14px;margin-top:16px;">Backrooms Mod © 2026 — Pitch Deck</p>
+        </div>
+    </div>
+</section>
+
+<script>
+const slides=document.querySelectorAll('.slide'),dots=document.querySelectorAll('.nav-dot'),counter=document.getElementById('slideCounter');
+dots.forEach(d=>d.addEventListener('click',()=>slides[parseInt(d.dataset.slide)].scrollIntoView({behavior:'smooth'})));
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const i=Array.from(slides).indexOf(e.target);dots.forEach(d=>d.classList.remove('active'));dots[i]?.classList.add('active');counter.textContent=`${String(i+1).padStart(2,'0')} / ${slides.length}`;e.target.querySelector('.slide-content')?.style.setProperty('animation','none');requestAnimationFrame(()=>e.target.querySelector('.slide-content')?.style.setProperty('animation',''));}});},{threshold:.45});
+slides.forEach(s=>obs.observe(s));
+document.addEventListener('keydown',e=>{const c=Array.from(dots).findIndex(d=>d.classList.contains('active'));if(e.key==='ArrowDown'||e.key==='PageDown'||e.key===' '){e.preventDefault();if(c<slides.length-1)slides[c+1].scrollIntoView({behavior:'smooth'});}if(e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();if(c>0)slides[c-1].scrollIntoView({behavior:'smooth'});}});
+</script>
+</body>
+</html>

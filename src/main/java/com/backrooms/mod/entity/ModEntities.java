@@ -52,24 +52,24 @@ public class ModEntities {
         FabricDefaultAttributeRegistry.register(MIMIC, MimicEntity.createMimicAttributes());
         FabricDefaultAttributeRegistry.register(WOODEN_STALKER, WoodenStalkerEntity.createWoodenStalkerAttributes());
 
-        // Разрешаем спавн при любом уровне света (Backrooms всегда освещены)
+        // Разрешаем спавн только на уровне лабиринта (Y от 100 до 105)
         SpawnRestriction.register(LURKER,
                 SpawnRestriction.Location.ON_GROUND,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-                (type, world, reason, pos, random) -> true // Всегда разрешён
+                (type, world, reason, pos, random) -> pos.getY() >= 100 && pos.getY() <= 106
         );
         SpawnRestriction.register(HOWLER,
                 SpawnRestriction.Location.ON_GROUND,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-                (type, world, reason, pos, random) -> true);
+                (type, world, reason, pos, random) -> pos.getY() >= 100 && pos.getY() <= 106);
         SpawnRestriction.register(MIMIC,
                 SpawnRestriction.Location.ON_GROUND,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-                (type, world, reason, pos, random) -> true);
+                (type, world, reason, pos, random) -> pos.getY() >= 100 && pos.getY() <= 106);
         SpawnRestriction.register(WOODEN_STALKER,
                 SpawnRestriction.Location.ON_GROUND,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-                (type, world, reason, pos, random) -> com.backrooms.mod.world.BackroomsChunkGenerator.isInfected(pos.getX(), pos.getZ()));
+                (type, world, reason, pos, random) -> pos.getY() >= 100 && pos.getY() <= 106 && com.backrooms.mod.world.BackroomsChunkGenerator.isInfected(pos.getX(), pos.getZ()));
 
         BackroomsMod.LOGGER.info("Backrooms entities registered");
     }

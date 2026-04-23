@@ -12,25 +12,25 @@
         "monster": [
             {
                 "type": "backrooms:lurker",
-                "weight": 100,
+                "weight": 5,
                 "minCount": 1,
                 "maxCount": 1
             },
             {
                 "type": "backrooms:howler",
-                "weight": 50,
+                "weight": 3,
                 "minCount": 1,
                 "maxCount": 1
             },
             {
                 "type": "backrooms:wooden_stalker",
-                "weight": 50,
+                "weight": 3,
                 "minCount": 1,
                 "maxCount": 1
             },
             {
                 "type": "backrooms:mimic",
-                "weight": 10,
+                "weight": 1,
                 "minCount": 1,
                 "maxCount": 1
             }

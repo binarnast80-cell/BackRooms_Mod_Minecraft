@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Күнделік — Курсовой Проект | Презентация</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===== NAV DOTS ===== -->
+<nav class="nav-dots" id="navDots">
+    <button class="nav-dot active" data-slide="0" data-label="Титульный"></button>
+    <button class="nav-dot" data-slide="1" data-label="Актуальность"></button>
+    <button class="nav-dot" data-slide="2" data-label="Цели и задачи"></button>
+    <button class="nav-dot" data-slide="3" data-label="MERN-стек"></button>
+    <button class="nav-dot" data-slide="4" data-label="Бэкенд"></button>
+    <button class="nav-dot" data-slide="5" data-label="База данных"></button>
+    <button class="nav-dot" data-slide="6" data-label="Безопасность"></button>
+    <button class="nav-dot" data-slide="7" data-label="Фронтенд"></button>
+    <button class="nav-dot" data-slide="8" data-label="Главная страница"></button>
+    <button class="nav-dot" data-slide="9" data-label="Аутентификация"></button>
+    <button class="nav-dot" data-slide="10" data-label="Дашборд и Дневник"></button>
+    <button class="nav-dot" data-slide="11" data-label="Журнал и Профиль"></button>
+    <button class="nav-dot" data-slide="12" data-label="Ключевые фичи"></button>
+    <button class="nav-dot" data-slide="13" data-label="Заключение"></button>
+</nav>
+
+<div class="slide-counter" id="slideCounter">01 / 14</div>
+
+<!-- ============================================================ -->
+<!-- SLIDE 1: TITLE -->
+<!-- ============================================================ -->
+<section class="slide slide--title" id="slide-0">
+    <div class="slide-content">
+        <div class="title-badge">✨ Курсовой проект 2026</div>
+        <h1 class="title-main" style="margin-bottom: 16px;">
+            <span class="gradient-text">Күнделік</span><br>
+            HomeworkHub
+        </h1>
+        <p class="title-sub" style="margin-bottom: 12px; font-weight: 500;">
+            Тема: Система контроля домашних заданий для школьников
+        </p>
+        <div style="font-size: 16px; color: var(--text-muted); line-height: 1.6; margin-bottom: 32px;">
+            <strong>Выполнил:</strong> студент группы ПО2407 Утегенов Арслан<br>
+            <strong>Руководитель:</strong> Онербекова Айғаным Мухтарқызы
+        </div>
+        <div class="title-meta">
+            <div class="meta-item">
+                <span class="meta-label">Технологии</span>
+                <span class="meta-value">MERN Stack</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Язык</span>
+                <span class="meta-value">JavaScript / TypeScript</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Страниц</span>
+                <span class="meta-value">10+ интерфейсов</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Роли</span>
+                <span class="meta-value">Ученик · Учитель · Админ</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 2: RELEVANCE & PROBLEM -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-1" id="slide-1">
+    <div class="slide-content">
+        <div class="section-number">01 — Актуальность</div>
+        <h2 class="section-title">Зачем нужен <span class="gradient-text">Күнделік</span>?</h2>
+        <p class="section-desc">
+            Существующие образовательные платформы перегружены функционалом, сложны в использовании и медлительны. Күнделік решает эту проблему.
+        </p>
+        <div class="grid-3">
+            <div class="glass-card">
+                <div class="card-icon card-icon--pink">⚠️</div>
+                <div class="card-title">Проблема</div>
+                <div class="card-text">Учителя и ученики тратят много времени на рутинную отправку заданий через громоздкие платформы</div>
+            </div>
+            <div class="glass-card">
+                <div class="card-icon card-icon--blue">💡</div>
+                <div class="card-title">Решение</div>
+                <div class="card-text">Узкоспециализированная быстрая система с ролевой моделью и поддержкой казахского и русского языков</div>
+            </div>
+            <div class="glass-card">
+                <div class="card-icon card-icon--emerald">🎯</div>
+                <div class="card-title">Результат</div>
+                <div class="card-text">Повышение продуктивности учебного процесса за счёт автоматизации контроля домашних заданий</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 3: GOALS & TASKS -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-2" id="slide-2">
+    <div class="slide-content">
+        <div class="section-number">02 — Цели и задачи</div>
+        <h2 class="section-title">Цель и задачи <span class="gradient-text">проекта</span></h2>
+        <div class="split">
+            <div>
+                <p class="section-desc" style="margin-bottom: 28px;">
+                    <strong style="color: var(--accent-cyan);">Цель:</strong> комплексное проектирование и разработка современного Full-Stack Web-приложения для управления домашними заданиями.
+                </p>
+                <ul class="feature-list">
+                    <li>Анализ предметной области и изучение существующих решений</li>
+                    <li>Проектирование архитектуры нереляционной базы данных</li>
+                    <li>Разработка стабильного бэкенда на Node.js + Express + MongoDB</li>
+                    <li>Создание отзывчивого фронтенда на React</li>
+                    <li>Интеграция компонентов и тестирование безопасности</li>
+                </ul>
+            </div>
+            <div>
+                <div class="glass-card" style="margin-bottom: 20px;">
+                    <div class="card-title" style="color: var(--accent-amber);">Объект</div>
+                    <div class="card-text">Процесс автоматизации контроля учебных заданий в современных школах Казахстана</div>
+                </div>
+                <div class="glass-card">
+                    <div class="card-title" style="color: var(--accent-purple);">Предмет</div>
+                    <div class="card-text">Архитектурные решения и технологии стека MERN (MongoDB, Express, React, Node.js)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 4: TECH STACK -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-3" id="slide-3">
+    <div class="slide-content">
+        <div class="section-number">03 — Технологии</div>
+        <h2 class="section-title">Архитектура <span class="gradient-text">MERN-стека</span></h2>
+        <p class="section-desc">Полная клиент-серверная архитектура на JavaScript</p>
+
+        <div class="arch-flow">
+            <div class="arch-box arch-box--react">⚛️ React 18<br><small style="font-weight:400;font-size:12px;">Vite + Router v6</small></div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box arch-box--node">🟢 Node.js<br><small style="font-weight:400;font-size:12px;">Среда выполнения</small></div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box arch-box--express">🚀 Express.js<br><small style="font-weight:400;font-size:12px;">REST API</small></div>
+            <div class="arch-arrow">→</div>
+            <div class="arch-box arch-box--mongo">🍃 MongoDB<br><small style="font-weight:400;font-size:12px;">Atlas + Mongoose</small></div>
+        </div>
+
+        <div class="grid-4" style="margin-top: 40px;">
+            <div class="glass-card stat-card">
+                <div class="stat-number" style="color: var(--accent-cyan);">10+</div>
+                <div class="stat-label">Страниц интерфейса</div>
+            </div>
+            <div class="glass-card stat-card">
+                <div class="stat-number" style="color: var(--accent-purple);">5</div>
+                <div class="stat-label">Mongoose моделей</div>
+            </div>
+            <div class="glass-card stat-card">
+                <div class="stat-number" style="color: var(--accent-emerald);">30+</div>
+                <div class="stat-label">Предметов в БД</div>
+            </div>
+            <div class="glass-card stat-card">
+                <div class="stat-number" style="color: var(--accent-amber);">3</div>
+                <div class="stat-label">Роли пользователей</div>
+            </div>
+        </div>
+
+        <div class="tech-pills-row" style="margin-top: 32px; justify-content: center;">
+            <span class="tech-pill">🔐 JWT</span>
+            <span class="tech-pill">🔒 Bcrypt</span>
+            <span class="tech-pill">📁 Multer</span>
+            <span class="tech-pill">✅ Zod</span>
+            <span class="tech-pill">🌐 React Router</span>
+            <span class="tech-pill">🔔 Toastify</span>
+            <span class="tech-pill">📋 React Hook Form</span>
+            <span class="tech-pill">🎨 CSS Modules</span>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 5: BACKEND / NODE + EXPRESS -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-4" id="slide-4">
+    <div class="slide-content">
+        <div class="section-number">04 — Серверная часть</div>
+        <h2 class="section-title">Бэкенд: <span class="gradient-text">Node.js + Express</span></h2>
+        <div class="split--40-60 split">
+            <div>
+                <p class="section-desc" style="margin-bottom: 24px;">
+                    Серверная часть обрабатывает запросы к API, управляет маршрутизацией и проверяет уровень доступа для каждого запроса.
+                </p>
+                <ul class="feature-list">
+                    <li>Асинхронная модель Event Loop</li>
+                    <li>REST API с CRUD-операциями</li>
+                    <li>Middleware-защита маршрутов</li>
+                    <li>Загрузка файлов через Multer</li>
+                    <li>Централизованная обработка ошибок</li>
+                </ul>
+            </div>
+            <div class="code-block" data-lang="JavaScript">
+                <div class="code-header">
+                    <span class="code-dot code-dot--red"></span>
+                    <span class="code-dot code-dot--yellow"></span>
+                    <span class="code-dot code-dot--green"></span>
+                    <span class="code-filename">assignmentController.js</span>
+                </div>
+<pre><span class="hl-keyword">const</span> <span class="hl-function">getAssignments</span> = <span class="hl-keyword">async</span> (<span class="hl-var">req, res, next</span>) <span class="hl-bracket">=></span> {
+  <span class="hl-keyword">const</span> filter = {};
+  <span class="hl-keyword">if</span> (req.query.search) {
+    filter.title = { <span class="hl-prop">$regex</span>: req.query.search };
+  }
+  <span class="hl-comment">// Фильтрация по классу ученика</span>
+  <span class="hl-keyword">if</span> (req.user.role === <span class="hl-string">'student'</span>) {
+    filter.targetGrade = req.user.grade;
+  }
+  <span class="hl-keyword">const</span> assignments = <span class="hl-keyword">await</span> Assignment
+    .<span class="hl-function">find</span>(filter)
+    .<span class="hl-function">populate</span>(<span class="hl-string">'subject'</span>, <span class="hl-string">'name icon'</span>)
+    .<span class="hl-function">sort</span>({ <span class="hl-prop">createdAt</span>: <span class="hl-const">-1</span> });
+  res.<span class="hl-function">json</span>({ <span class="hl-prop">success</span>: <span class="hl-const">true</span>, data: assignments });
+};</pre>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 6: DATABASE -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-1" id="slide-5">
+    <div class="slide-content">
+        <div class="section-number">05 — База данных</div>
+        <h2 class="section-title">MongoDB + <span class="gradient-text">Mongoose</span></h2>
+        <div class="split">
+            <div class="code-block" data-lang="JavaScript">
+                <div class="code-header">
+                    <span class="code-dot code-dot--red"></span>
+                    <span class="code-dot code-dot--yellow"></span>
+                    <span class="code-dot code-dot--green"></span>
+                    <span class="code-filename">models/User.js</span>
+                </div>
+<pre><span class="hl-keyword">const</span> userSchema = <span class="hl-keyword">new</span> mongoose.<span class="hl-function">Schema</span>({
+  <span class="hl-prop">firstName</span>: {
+    type: <span class="hl-type">String</span>,
+    required: [<span class="hl-const">true</span>, <span class="hl-string">'Имя обязательно'</span>],
+    maxlength: [<span class="hl-const">50</span>, <span class="hl-string">'Макс 50 символов'</span>],
+  },
+  <span class="hl-prop">email</span>: {
+    type: <span class="hl-type">String</span>, unique: <span class="hl-const">true</span>,
+    match: [<span class="hl-string">/^\S+@\S+\.\S+$/</span>, <span class="hl-string">'Email некорректен'</span>],
+  },
+  <span class="hl-prop">role</span>: {
+    type: <span class="hl-type">String</span>,
+    enum: [<span class="hl-string">'student'</span>, <span class="hl-string">'teacher'</span>, <span class="hl-string">'admin'</span>],
+  },
+  <span class="hl-prop">grade</span>: {
+    type: <span class="hl-type">Number</span>,
+    min: [<span class="hl-const">1</span>, <span class="hl-string">'Класс от 1'</span>],
+    max: [<span class="hl-const">11</span>, <span class="hl-string">'Класс до 11'</span>],
+  },
+});
+
+<span class="hl-comment">// Автоматическое хэширование пароля</span>
+userSchema.<span class="hl-function">pre</span>(<span class="hl-string">'save'</span>, <span class="hl-keyword">async function</span>() {
+  <span class="hl-keyword">this</span>.password = <span class="hl-keyword">await</span> bcrypt.<span class="hl-function">hash</span>(<span class="hl-keyword">this</span>.password, <span class="hl-const">10</span>);
+});</pre>
+            </div>
+            <div>
+                <p class="section-desc">
+                    Гибкая NoSQL-база данных MongoDB хранит данные в JSON-документах. Mongoose накладывает строгую валидацию.
+                </p>
+                <div class="glass-card" style="margin-bottom: 16px;">
+                    <div class="card-title">📄 5 Mongoose-моделей</div>
+                    <div class="card-text">User, Assignment, Submission, Subject, Schedule — полная структура данных школьной платформы</div>
+                </div>
+                <div class="glass-card" style="margin-bottom: 16px;">
+                    <div class="card-title">🔗 Связи (populate)</div>
+                    <div class="card-text">Assignment → Subject + Teacher, Submission → Student + Assignment</div>
+                </div>
+                <div class="glass-card">
+                    <div class="card-title">🛡️ Валидация</div>
+                    <div class="card-text">Класс строго от 1 до 11, email уникален, роли ограничены enum</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 7: SECURITY -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-2" id="slide-6">
+    <div class="slide-content">
+        <div class="section-number">06 — Безопасность</div>
+        <h2 class="section-title">JWT + Bcrypt: <span class="gradient-text">Защита данных</span></h2>
+        <div class="split--40-60 split">
+            <div>
+                <p class="section-desc" style="margin-bottom: 24px;">
+                    Каждый API-запрос проходит двойную проверку. Пароли хранятся в виде необратимого хэша.
+                </p>
+                <div class="glass-card" style="margin-bottom: 16px;">
+                    <span class="tag tag--blue">authMiddleware.js</span>
+                    <div class="card-text" style="margin-top: 10px;">Проверяет JWT-токен из заголовка Authorization. Подделанный или просроченный токен → <strong style="color:#f07178;">401 Unauthorized</strong></div>
+                </div>
+                <div class="glass-card" style="margin-bottom: 16px;">
+                    <span class="tag tag--purple">roleMiddleware.js</span>
+                    <div class="card-text" style="margin-top: 10px;">Ученик не может удалить задание → <strong style="color:#f07178;">403 Forbidden</strong></div>
+                </div>
+                <div class="glass-card">
+                    <span class="tag tag--emerald">errorHandler.js</span>
+                    <div class="card-text" style="margin-top: 10px;">Единый обработчик ошибок: ValidationError, CastError, дубли, JWT-сбои</div>
+                </div>
+            </div>
+            <div class="code-block" data-lang="JavaScript">
+                <div class="code-header">
+                    <span class="code-dot code-dot--red"></span>
+                    <span class="code-dot code-dot--yellow"></span>
+                    <span class="code-dot code-dot--green"></span>
+                    <span class="code-filename">errorHandler.js</span>
+                </div>
+<pre><span class="hl-keyword">const</span> <span class="hl-function">errorHandler</span> = (<span class="hl-var">err, req, res, next</span>) <span class="hl-bracket">=></span> {
+  <span class="hl-keyword">let</span> statusCode = err.statusCode || <span class="hl-const">500</span>;
+  <span class="hl-keyword">let</span> message = err.message;
+
+  <span class="hl-keyword">if</span> (err.name === <span class="hl-string">'ValidationError'</span>) {
+    statusCode = <span class="hl-const">400</span>;
+    message = Object.<span class="hl-function">values</span>(err.errors)
+      .<span class="hl-function">map</span>(e <span class="hl-bracket">=></span> e.message).<span class="hl-function">join</span>(<span class="hl-string">', '</span>);
+  }
+
+  <span class="hl-keyword">if</span> (err.code === <span class="hl-const">11000</span>) {
+    statusCode = <span class="hl-const">400</span>;
+    message = <span class="hl-string">`Поле уже существует`</span>;
+  }
+
+  <span class="hl-keyword">if</span> (err.name === <span class="hl-string">'JsonWebTokenError'</span>) {
+    statusCode = <span class="hl-const">401</span>;
+    message = <span class="hl-string">'Невалидный токен'</span>;
+  }
+
+  res.<span class="hl-function">status</span>(statusCode).<span class="hl-function">json</span>({
+    <span class="hl-prop">success</span>: <span class="hl-const">false</span>, <span class="hl-prop">error</span>: message
+  });
+};</pre>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 8: FRONTEND -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-3" id="slide-7">
+    <div class="slide-content">
+        <div class="section-number">07 — Фронтенд</div>
+        <h2 class="section-title">React 18 + <span class="gradient-text">Vite</span></h2>
+        <div class="split">
+            <div>
+                <p class="section-desc" style="margin-bottom: 24px;">
+                    Клиентская часть построена на React — библиотека мгновенно обновляет только изменившиеся элементы через Virtual DOM.
+                </p>
+                <div class="grid-2" style="gap: 16px;">
+                    <div class="glass-card">
+                        <div class="card-icon card-icon--cyan">⚡</div>
+                        <div class="card-title">Vite</div>
+                        <div class="card-text">Сверхбыстрая сборка за миллисекунды</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-icon card-icon--purple">🧭</div>
+                        <div class="card-title">React Router v6</div>
+                        <div class="card-text">SPA навигация без перезагрузки</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-icon card-icon--amber">📋</div>
+                        <div class="card-title">React Hook Form</div>
+                        <div class="card-text">Высокопроизводительные формы</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="card-icon card-icon--emerald">🛡️</div>
+                        <div class="card-title">Zod</div>
+                        <div class="card-text">Клиентская валидация ввода</div>
+                    </div>
+                </div>
+            </div>
+            <div class="code-block" data-lang="JSX">
+                <div class="code-header">
+                    <span class="code-dot code-dot--red"></span>
+                    <span class="code-dot code-dot--yellow"></span>
+                    <span class="code-dot code-dot--green"></span>
+                    <span class="code-filename">HomePage.jsx</span>
+                </div>
+<pre><span class="hl-keyword">export default function</span> <span class="hl-function">HomePage</span>() {
+  <span class="hl-keyword">const</span> { t } = <span class="hl-function">useLanguage</span>();
+
+  <span class="hl-keyword">const</span> features = [
+    { icon: <span class="hl-string">'📝'</span>, title: <span class="hl-function">t</span>(<span class="hl-string">'feat_create'</span>) },
+    { icon: <span class="hl-string">'📤'</span>, title: <span class="hl-function">t</span>(<span class="hl-string">'feat_submit'</span>) },
+    { icon: <span class="hl-string">'✅'</span>, title: <span class="hl-function">t</span>(<span class="hl-string">'feat_grade'</span>) },
+    { icon: <span class="hl-string">'🇰🇿'</span>, title: <span class="hl-function">t</span>(<span class="hl-string">'feat_kz'</span>) },
+  ];
+
+  <span class="hl-keyword">return</span> (
+    <span class="hl-bracket">&lt;</span><span class="hl-type">main</span><span class="hl-bracket">&gt;</span>
+      <span class="hl-bracket">&lt;</span><span class="hl-type">h1</span><span class="hl-bracket">&gt;</span>{<span class="hl-function">t</span>(<span class="hl-string">'home_title'</span>)}<span class="hl-bracket">&lt;/</span><span class="hl-type">h1</span><span class="hl-bracket">&gt;</span>
+      {features.<span class="hl-function">map</span>(f <span class="hl-bracket">=></span> (
+        <span class="hl-bracket">&lt;</span><span class="hl-type">article</span><span class="hl-bracket">&gt;</span>
+          {f.icon} {f.title}
+        <span class="hl-bracket">&lt;/</span><span class="hl-type">article</span><span class="hl-bracket">&gt;</span>
+      ))}
+    <span class="hl-bracket">&lt;/</span><span class="hl-type">main</span><span class="hl-bracket">&gt;</span>
+  );
+}</pre>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 9: HOMEPAGE SCREENSHOT -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-4" id="slide-8">
+    <div class="slide-content">
+        <div class="section-number">08 — Интерфейс</div>
+        <h2 class="section-title">Главная страница <span class="gradient-text">Күнделік</span></h2>
+        <p class="section-desc">
+            Лэндинг приложения с карточками предметов, информацией о платформе и призывом к регистрации. Интерфейс поддерживает казахский и русский языки.
+        </p>
+        <div class="screenshot-wrapper">
+            <img src="img/homepage.png" alt="Главная страница Күнделік">
+        </div>
+        <div class="screenshot-label">Рисунок 1 — Главная страница Web-приложения (HomePage)</div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 10: AUTH PAGES -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-1" id="slide-9">
+    <div class="slide-content">
+        <div class="section-number">09 — Аутентификация</div>
+        <h2 class="section-title">Вход и <span class="gradient-text">регистрация</span></h2>
+        <p class="section-desc">
+            Формы входа и регистрации с валидацией Zod, выбором роли (ученик/учитель) и класса. Стилизованы в стиле Glassmorphism.
+        </p>
+        <div class="screenshots-duo">
+            <div>
+                <div class="screenshot-wrapper">
+                    <img src="img/login.png" alt="Страница входа">
+                </div>
+                <div class="screenshot-label">Рисунок 2 — Страница входа (LoginPage)</div>
+            </div>
+            <div>
+                <div class="screenshot-wrapper">
+                    <img src="img/register.png" alt="Страница регистрации">
+                </div>
+                <div class="screenshot-label">Рисунок 3 — Страница регистрации (RegisterPage)</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 11: DASHBOARD & DIARY -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-2" id="slide-10">
+    <div class="slide-content">
+        <div class="section-number">10 — Панель управления</div>
+        <h2 class="section-title">Дашборд и <span class="gradient-text">Күнделік</span></h2>
+        <p class="section-desc">
+            Персональная панель управления со статистикой и электронный дневник с расписанием, заданиями и оценками.
+        </p>
+        <div class="screenshots-duo">
+            <div>
+                <div class="screenshot-wrapper">
+                    <img src="img/dashboard.png" alt="Дашборд">
+                </div>
+                <div class="screenshot-label">Рисунок 4 — Дашборд ученика (DashboardPage)</div>
+            </div>
+            <div>
+                <div class="screenshot-wrapper">
+                    <img src="img/diary.png" alt="Дневник">
+                </div>
+                <div class="screenshot-label">Рисунок 5 — Электронный дневник (DiaryPage)</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 12: GRADES, SCHEDULE, PROFILE -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-3" id="slide-11">
+    <div class="slide-content">
+        <div class="section-number">11 — Внутренние страницы</div>
+        <h2 class="section-title">Журнал, Расписание, <span class="gradient-text">Профиль</span></h2>
+        <div class="screenshots-trio">
+            <div>
+                <div class="screenshot-wrapper">
+                    <img src="img/grades.png" alt="Журнал оценок">
+                </div>
+                <div class="screenshot-label">Рисунок 6 — Журнал оценок</div>
+            </div>
+            <div>
+                <div class="screenshot-wrapper">
+                    <img src="img/schedule.png" alt="Расписание">
+                </div>
+                <div class="screenshot-label">Рисунок 7 — Расписание уроков</div>
+            </div>
+            <div>
+                <div class="screenshot-wrapper">
+                    <img src="img/profile.png" alt="Профиль">
+                </div>
+                <div class="screenshot-label">Рисунок 8 — Профиль пользователя</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 13: KEY FEATURES -->
+<!-- ============================================================ -->
+<section class="slide slide--gradient-4" id="slide-12">
+    <div class="slide-content">
+        <div class="section-number">12 — Ключевые фичи</div>
+        <h2 class="section-title">Уникальные <span class="gradient-text">возможности</span></h2>
+        <div class="grid-3">
+            <div class="glass-card">
+                <div class="card-icon card-icon--cyan">⏱️</div>
+                <div class="card-title">Debounce-поиск</div>
+                <div class="card-text">Хук useDebounce замораживает запросы на 500мс, экономя ресурсы СУБД. Вместо десятков запросов — один итоговый</div>
+            </div>
+            <div class="glass-card">
+                <div class="card-icon card-icon--purple">🎓</div>
+                <div class="card-title">Фильтрация по классу</div>
+                <div class="card-text">Ученики 8-го класса не видят предметы начальных классов. Серверная фильтрация через filter.targetGrade</div>
+            </div>
+            <div class="glass-card">
+                <div class="card-icon card-icon--amber">📤</div>
+                <div class="card-title">Загрузка файлов</div>
+                <div class="card-text">Multer обрабатывает FormData: фото тетрадей, PDF рефераты. Уникальные имена с привязкой ко времени</div>
+            </div>
+            <div class="glass-card">
+                <div class="card-icon card-icon--emerald">🌐</div>
+                <div class="card-title">Билингвальность</div>
+                <div class="card-text">LanguageContext + translations.js: полный перевод интерфейса на казахский и русский языки</div>
+            </div>
+            <div class="glass-card">
+                <div class="card-icon card-icon--pink">🔔</div>
+                <div class="card-title">Toastify уведомления</div>
+                <div class="card-text">Всплывающие уведомления об успехе или ошибке в правом нижнем углу экрана для каждого действия</div>
+            </div>
+            <div class="glass-card">
+                <div class="card-icon card-icon--blue">🎨</div>
+                <div class="card-title">Glassmorphism UI</div>
+                <div class="card-text">Стеклянный морфизм с полупрозрачностью, шрифт Outfit и CSS Modules для изоляции стилей</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- SLIDE 14: CONCLUSION -->
+<!-- ============================================================ -->
+<section class="slide slide--title" id="slide-13">
+    <div class="slide-content" style="text-align: center;">
+        <div class="section-number">13 — Заключение</div>
+        <h2 class="section-title" style="margin-bottom: 16px;">
+            Проект <span class="gradient-text">завершён</span> успешно
+        </h2>
+        <p class="section-desc" style="margin: 0 auto 40px; text-align: center;">
+            Все поставленные цели и задачи курсового проекта были реализованы в полном объёме.
+        </p>
+
+        <div class="conclusion-grid">
+            <div class="conclusion-item">
+                <div class="item-icon">✅</div>
+                <div class="item-title">Полный Full-Stack</div>
+                <div class="item-text">Бэкенд (Node.js) + Фронтенд (React) + БД (MongoDB) — единая система</div>
+            </div>
+            <div class="conclusion-item">
+                <div class="item-icon">🔐</div>
+                <div class="item-title">Безопасность</div>
+                <div class="item-text">JWT-аутентификация, Bcrypt-хэширование, ролевой доступ через Middleware</div>
+            </div>
+            <div class="conclusion-item">
+                <div class="item-icon">🎨</div>
+                <div class="item-title">Современный UI</div>
+                <div class="item-text">10+ страниц с Glassmorphism-дизайном, адаптивной вёрсткой и анимациями</div>
+            </div>
+            <div class="conclusion-item">
+                <div class="item-icon">🇰🇿</div>
+                <div class="item-title">Билингвальность</div>
+                <div class="item-text">Полная поддержка казахского и русского языков (кнопка переключения KZ/RU)</div>
+            </div>
+            <div class="conclusion-item">
+                <div class="item-icon">📁</div>
+                <div class="item-title">Загрузка файлов</div>
+                <div class="item-text">Ученики прикрепляют решения, учителя оценивают работы с отзывами</div>
+            </div>
+            <div class="conclusion-item">
+                <div class="item-icon">🚀</div>
+                <div class="item-title">30+ предметов</div>
+                <div class="item-text">Автоматическое наполнение БД всеми предметами казахстанской школьной программы</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 48px;">
+            <h2 class="title-main" style="font-size: 48px;">
+                <span class="gradient-text">Рахмет!</span>
+            </h2>
+            <p style="color: var(--text-muted); font-size: 16px; margin-top: 8px;">Күнделік © 2026 — Курсовой проект</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.nav-dot');
+    const counter = document.getElementById('slideCounter');
+
+    // Scroll to slide on dot click
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const idx = parseInt(dot.dataset.slide);
+            slides[idx].scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // Update active dot on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const idx = Array.from(slides).indexOf(entry.target);
+                dots.forEach(d => d.classList.remove('active'));
+                dots[idx]?.classList.add('active');
+                counter.textContent = `${String(idx + 1).padStart(2, '0')} / ${slides.length}`;
+
+                // Re-trigger animation
+                entry.target.querySelector('.slide-content')?.style.setProperty('animation', 'none');
+                requestAnimationFrame(() => {
+                    entry.target.querySelector('.slide-content')?.style.setProperty('animation', '');
+                });
+            }
+        });
+    }, { threshold: 0.5 });
+
+    slides.forEach(slide => observer.observe(slide));
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        const currentIdx = Array.from(dots).findIndex(d => d.classList.contains('active'));
+        if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ') {
+            e.preventDefault();
+            if (currentIdx < slides.length - 1) {
+                slides[currentIdx + 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+            e.preventDefault();
+            if (currentIdx > 0) {
+                slides[currentIdx - 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
