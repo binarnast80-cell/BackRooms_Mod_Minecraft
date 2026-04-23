@@ -1,7 +1,12 @@
 {
     "variants": {
-        "density=0": { "model": "backrooms:block/black_mold_light" },
-        "density=1": { "model": "backrooms:block/black_mold_medium" },
-        "density=2": { "model": "backrooms:block/black_mold_heavy" }
+        "density=0": { "model": "backrooms:block/black_mold_0" },
+        "density=1": { "model": "backrooms:block/black_mold_1" },
+        "density=2": { "model": "backrooms:block/black_mold_2" },
+        "density=3": { "model": "backrooms:block/black_mold_3" },
+        "density=4": { "model": "backrooms:block/black_mold_4" },
+        "density=5": { "model": "backrooms:block/black_mold_5" },
+        "density=6": { "model": "backrooms:block/black_mold_6" },
+        "density=7": { "model": "backrooms:block/black_mold_7" }
     }
 }

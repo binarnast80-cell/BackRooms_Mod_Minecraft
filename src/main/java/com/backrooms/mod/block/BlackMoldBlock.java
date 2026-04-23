@@ -25,8 +25,8 @@ import net.minecraft.world.World;
  */
 public class BlackMoldBlock extends Block {
 
-    // Плотность плесени: 0 = редкие пиксели, 1 = средние, 2 = густые
-    public static final IntProperty DENSITY = IntProperty.of("density", 0, 2);
+    // Плотность плесени: 0 = единичные пиксели (край), 7 = густая плесень (центр)
+    public static final IntProperty DENSITY = IntProperty.of("density", 0, 7);
 
     // Тончайший VoxelShape (1 пиксель = 1/16 блока), лежит на полу
     private static final VoxelShape SHAPE = Block.createCuboidShape(0, 0, 0, 16, 1, 16);
@@ -69,7 +69,7 @@ public class BlackMoldBlock extends Block {
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, net.minecraft.util.math.random.Random random) {
         // Чёрные споры — чем плотнее плесень, тем больше частиц
         int density = state.get(DENSITY);
-        int particleChance = 8 - density * 2; // 8, 6, 4
+        int particleChance = 12 - density; // 12 для level 0, 5 для level 7
 
         if (random.nextInt(particleChance) == 0) {
             double x = pos.getX() + random.nextDouble();
@@ -80,7 +80,7 @@ public class BlackMoldBlock extends Block {
         }
 
         // Дополнительные мелкие споры для густой плесени
-        if (density >= 2 && random.nextInt(4) == 0) {
+        if (density >= 5 && random.nextInt(4) == 0) {
             double x = pos.getX() + random.nextDouble();
             double y = pos.getY() + random.nextDouble() * 0.5;
             double z = pos.getZ() + random.nextDouble();

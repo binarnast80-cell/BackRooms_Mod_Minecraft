@@ -145,10 +145,7 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         }
 
         // ТРЕТИЙ ПРОХОД: Генерация пятен чёрной плесени (везде в Backrooms)
-        BlockState moldLight = ModBlocks.BLACK_MOLD.getDefaultState().with(BlackMoldBlock.DENSITY, 0);
-        BlockState moldMedium = ModBlocks.BLACK_MOLD.getDefaultState().with(BlackMoldBlock.DENSITY, 1);
-        BlockState moldHeavy = ModBlocks.BLACK_MOLD.getDefaultState().with(BlackMoldBlock.DENSITY, 2);
-
+        // 8 уровней плотности — от 1-2 пикселей на краю до густой плесени в центре
         for (int lx = 0; lx < 16; lx++) {
             for (int lz = 0; lz < 16; lz++) {
                 int wx = startX + lx;
@@ -156,29 +153,22 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
 
                 if (isWall(wx, wz)) continue;
 
-                // Шум для определения центров пятен плесени (другой seed)
+                // Многослойный шум для органичных пятен разных размеров (2-17 блоков)
                 double moldNoise = simpleNoise(wx / 8.0, wz / 8.0, WORLD_SEED + 700);
                 double moldDetail = simpleNoise(wx / 3.0, wz / 3.0, WORLD_SEED + 701);
-                double moldValue = moldNoise * 0.7 + moldDetail * 0.3;
+                double moldMicro = simpleNoise(wx / 1.5, wz / 1.5, WORLD_SEED + 702);
+                double moldValue = moldNoise * 0.55 + moldDetail * 0.30 + moldMicro * 0.15;
 
-                // Порог: только в определенных зонах (создает пятна 2-17 блоков)
-                if (moldValue > 0.72) {
-                    // Определяем плотность по значению шума
-                    int density;
-                    if (moldValue > 0.85) {
-                        density = 2; // Центр пятна — густая плесень
-                    } else if (moldValue > 0.78) {
-                        density = 1; // Средняя
-                    } else {
-                        density = 0; // Край — редкие пиксели
-                    }
+                // Порог 0.65: начало пятна (единичные пиксели)
+                if (moldValue > 0.65) {
+                    // Плавный градиент: 0.65 -> density 0, 0.90+ -> density 7
+                    double normalized = (moldValue - 0.65) / 0.25; // 0.0 .. 1.0
+                    int density = (int) Math.min(7, Math.floor(normalized * 8));
 
-                    BlockState moldState;
-                    if (density == 2) moldState = moldHeavy;
-                    else if (density == 1) moldState = moldMedium;
-                    else moldState = moldLight;
+                    BlockState moldState = ModBlocks.BLACK_MOLD.getDefaultState()
+                            .with(BlackMoldBlock.DENSITY, density);
 
-                    // Ставим плесень на пол (Y = WALL_MIN_Y, поверх пола)
+                    // Ставим плесень на пол (поверх пола, Y = WALL_MIN_Y)
                     BlockPos floorCheck = new BlockPos(lx, WALL_MIN_Y, lz);
                     if (chunk.getBlockState(floorCheck).isAir()) {
                         chunk.setBlockState(mutable.set(lx, WALL_MIN_Y, lz), moldState, false);
