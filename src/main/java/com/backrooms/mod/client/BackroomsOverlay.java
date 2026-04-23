@@ -93,8 +93,8 @@ public class BackroomsOverlay {
                     break;
 
                 case ARRIVAL:
-                    // Первый кадр — играем звук прибытия
-                    if (!arrivalSoundPlayed) {
+                    // Звук прибытия с задержкой 1.5 сек (30 тиков)
+                    if (!arrivalSoundPlayed && fadeTimer >= 30) {
                         arrivalSoundPlayed = true;
                         if (client.player != null) {
                             client.getSoundManager().play(

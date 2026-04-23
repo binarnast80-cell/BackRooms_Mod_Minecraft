@@ -159,11 +159,14 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
                 double moldMicro = simpleNoise(wx / 1.5, wz / 1.5, WORLD_SEED + 702);
                 double moldValue = moldNoise * 0.55 + moldDetail * 0.30 + moldMicro * 0.15;
 
-                // Порог 0.88: пятна появляются очень редко (примерно как факелы)
-                if (moldValue > 0.88) {
-                    // Плавный градиент: 0.88 -> density 0, 0.97+ -> density 7
-                    double normalized = (moldValue - 0.88) / 0.09; // 0.0 .. 1.0
-                    int density = (int) Math.min(7, Math.floor(normalized * 8));
+                // Порог 0.75: пятна появляются чаще
+                if (moldValue > 0.75) {
+                    // Градиент с квадратичной кривой: края разреженные, центр без зазоров
+                    double normalized = (moldValue - 0.75) / 0.20; // 0.0 .. 1.0+
+                    normalized = Math.min(1.0, normalized);
+                    // Квадратичная кривая: быстро набирает плотность к центру
+                    double curved = normalized * normalized;
+                    int density = (int) Math.min(7, Math.floor(curved * 8));
 
                     BlockState moldState = ModBlocks.BLACK_MOLD.getDefaultState()
                             .with(BlackMoldBlock.DENSITY, density);
