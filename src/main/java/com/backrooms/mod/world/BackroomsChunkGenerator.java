@@ -319,6 +319,11 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         if (random.nextInt(100) == 0) {
             spawnEntitySafe(region, random, cx, cz, ModEntities.MIMIC);
         }
+
+        // Wooden Stalker: ~5% шанс на чанк
+        if (random.nextInt(20) == 0) {
+            spawnEntitySafe(region, random, cx, cz, ModEntities.WOODEN_STALKER);
+        }
     }
 
     /**
