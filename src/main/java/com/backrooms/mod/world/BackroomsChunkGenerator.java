@@ -128,7 +128,7 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
                 if (isWall(wx, wz)) continue;      // Нам нужен пустой блок воздуха рядом со стеной
                 
                 long torchHash = mixHash(WORLD_SEED + 999, wx * 131L, wz * 137L);
-                if (Math.abs(torchHash) % 10000 < 23) { // 0.23% шанс, как вы и просили
+                if (Math.abs(torchHash) % 10000 < 21) { // 0.21% шанс
                     net.minecraft.util.math.Direction dir = null;
                     if (isWall(wx - 1, wz)) dir = net.minecraft.util.math.Direction.EAST;
                     else if (isWall(wx + 1, wz)) dir = net.minecraft.util.math.Direction.WEST;
@@ -411,52 +411,68 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         int cz = region.getCenterPos().getStartZ();
         Random random = new CheckedRandom(region.getSeed() + region.getCenterPos().toLong());
 
-        // Lurker: Довольно часто (1 шанс из 15)
+        // Lurker: 1 шанс из 15 (ТОЛЬКО в обычной зоне)
         if (random.nextInt(15) == 0) {
-            spawnEntitySafe(region, random, cx, cz, ModEntities.LURKER);
+            spawnEntitySafe(region, random, cx, cz, ModEntities.LURKER, false);
         }
 
-        // Howler: В 2 раза реже Ларкера (1 шанс из 30)
+        // Howler: 1 шанс из 30 (ТОЛЬКО в обычной зоне)
         if (random.nextInt(30) == 0) {
-            spawnEntitySafe(region, random, cx, cz, ModEntities.HOWLER);
+            spawnEntitySafe(region, random, cx, cz, ModEntities.HOWLER, false);
         }
 
-        // Mimic: В 10 раз реже Ларкера и в 5 раз реже Хаулера (1 шанс из 150)
+        // Mimic: 1 шанс из 150 (ТОЛЬКО в обычной зоне)
         if (random.nextInt(150) == 0) {
-            spawnEntitySafe(region, random, cx, cz, ModEntities.MIMIC);
+            spawnEntitySafe(region, random, cx, cz, ModEntities.MIMIC, false);
         }
 
-        // Wooden Stalker: ~3.3% шанс на чанк (1 шанс из 30)
-        if (random.nextInt(30) == 0) {
-            spawnEntitySafe(region, random, cx, cz, ModEntities.WOODEN_STALKER);
+        // WoodenStalker: спавн по-блочно с шансом 0.22% (ТОЛЬКО в зараженной зоне)
+        for (int lx = 0; lx < 16; lx++) {
+            for (int lz = 0; lz < 16; lz++) {
+                int wx = cx + lx;
+                int wz = cz + lz;
+
+                if (!isInfected(wx, wz)) continue;
+                if (isWall(wx, wz)) continue;
+
+                long stalkerHash = mixHash(WORLD_SEED + 888, wx * 151L, wz * 157L);
+                if (Math.abs(stalkerHash) % 10000 < 22) { // 0.22% шанс
+                    BlockPos feetPos = new BlockPos(wx, WALL_MIN_Y, wz);
+                    BlockPos headPos = new BlockPos(wx, WALL_MIN_Y + 1, wz);
+
+                    if (region.getBlockState(feetPos).isAir() && region.getBlockState(headPos).isAir()) {
+                        Entity entity = ModEntities.WOODEN_STALKER.create(region.toServerWorld());
+                        if (entity != null) {
+                            entity.refreshPositionAndAngles(
+                                    wx + 0.5, WALL_MIN_Y, wz + 0.5,
+                                    random.nextFloat() * 360.0f, 0.0f);
+                            region.spawnEntity(entity);
+                        }
+                    }
+                }
+            }
         }
     }
 
     /**
      * Безопасный спавн сущности — ТОЛЬКО внутри лабиринта.
-     * Проверяет:
-     * - Позиция не в стене
-     * - Блок под ногами = пол
-     * - Блок на уровне головы = воздух (не потолок)
-     * - Y координата строго = 1 (на полу внутри лабиринта)
+     * @param requireNonInfected если true — моб спавнится ТОЛЬКО в обычной (не зараженной) зоне
      */
     private void spawnEntitySafe(ChunkRegion region, Random random,
-            int chunkStartX, int chunkStartZ, EntityType<?> type) {
+            int chunkStartX, int chunkStartZ, EntityType<?> type, boolean requireInfected) {
         for (int attempt = 0; attempt < 10; attempt++) {
             int x = chunkStartX + random.nextInt(16);
             int z = chunkStartZ + random.nextInt(16);
 
-            // Проверяем что координата — внутри лабиринта (не стена, не столб)
             if (isWall(x, z)) {
                 continue;
             }
 
-            // СТРОГО: Деревянный сталкер спавнится ТОЛЬКО в зараженной зоне
-            if (type == com.backrooms.mod.entity.ModEntities.WOODEN_STALKER && !isInfected(x, z)) {
+            // Обычные мобы НЕ спавнятся в зараженной зоне
+            if (!requireInfected && isInfected(x, z)) {
                 continue;
             }
 
-            // Проверяем блоки: пол под ногами, воздух на Y=1 и Y=2
             BlockPos floorPos = new BlockPos(x, FLOOR_Y, z);
             BlockPos feetPos = new BlockPos(x, WALL_MIN_Y, z);
             BlockPos headPos = new BlockPos(x, WALL_MIN_Y + 1, z);
@@ -470,7 +486,6 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
 
                 Entity entity = type.create(region.toServerWorld());
                 if (entity != null) {
-                    // Спавн строго на Y=1 (на полу)
                     entity.refreshPositionAndAngles(
                             x + 0.5, WALL_MIN_Y, z + 0.5,
                             random.nextFloat() * 360.0f, 0.0f);
