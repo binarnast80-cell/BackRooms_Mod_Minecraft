@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "density=0": { "model": "backrooms:block/black_mold_light" },
+        "density=1": { "model": "backrooms:block/black_mold_medium" },
+        "density=2": { "model": "backrooms:block/black_mold_heavy" }
+    }
+}

@@ -144,6 +144,16 @@ public class ModBlocks {
         }
     };
 
+    // Чёрная плесень — тонкий оверлей, вызывает тошноту
+    public static final Block BLACK_MOLD = new BlackMoldBlock(
+            FabricBlockSettings.create()
+                    .strength(0.1f)
+                    .sounds(BlockSoundGroup.SLIME)
+                    .noCollision()
+                    .nonOpaque()
+                    .dropsNothing()
+    );
+
     public static void register() {
         // Регистрация блоков
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_wall"), BACKROOMS_WALL);
@@ -152,5 +162,6 @@ public class ModBlocks {
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_lamp"), BACKROOMS_LAMP);
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "soggy_wall"), SOGGY_WALL);
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "green_wallpaper"), GREEN_WALLPAPER);
+        Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "black_mold"), BLACK_MOLD);
     }
 }

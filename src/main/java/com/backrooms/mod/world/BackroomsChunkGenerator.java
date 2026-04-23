@@ -1,6 +1,7 @@
 package com.backrooms.mod.world;
 
 import com.backrooms.mod.block.ModBlocks;
+import com.backrooms.mod.block.BlackMoldBlock;
 import com.backrooms.mod.entity.ModEntities;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -138,6 +139,49 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
                     if (dir != null) {
                         BlockState torchState = Blocks.WALL_TORCH.getDefaultState().with(net.minecraft.state.property.Properties.HORIZONTAL_FACING, dir);
                         chunk.setBlockState(mutable.set(lx, WALL_MIN_Y + 2, lz), torchState, false); // WALL_MIN_Y + 2 это 3-й блок стены
+                    }
+                }
+            }
+        }
+
+        // ТРЕТИЙ ПРОХОД: Генерация пятен чёрной плесени (везде в Backrooms)
+        BlockState moldLight = ModBlocks.BLACK_MOLD.getDefaultState().with(BlackMoldBlock.DENSITY, 0);
+        BlockState moldMedium = ModBlocks.BLACK_MOLD.getDefaultState().with(BlackMoldBlock.DENSITY, 1);
+        BlockState moldHeavy = ModBlocks.BLACK_MOLD.getDefaultState().with(BlackMoldBlock.DENSITY, 2);
+
+        for (int lx = 0; lx < 16; lx++) {
+            for (int lz = 0; lz < 16; lz++) {
+                int wx = startX + lx;
+                int wz = startZ + lz;
+
+                if (isWall(wx, wz)) continue;
+
+                // Шум для определения центров пятен плесени (другой seed)
+                double moldNoise = simpleNoise(wx / 8.0, wz / 8.0, WORLD_SEED + 700);
+                double moldDetail = simpleNoise(wx / 3.0, wz / 3.0, WORLD_SEED + 701);
+                double moldValue = moldNoise * 0.7 + moldDetail * 0.3;
+
+                // Порог: только в определенных зонах (создает пятна 2-17 блоков)
+                if (moldValue > 0.72) {
+                    // Определяем плотность по значению шума
+                    int density;
+                    if (moldValue > 0.85) {
+                        density = 2; // Центр пятна — густая плесень
+                    } else if (moldValue > 0.78) {
+                        density = 1; // Средняя
+                    } else {
+                        density = 0; // Край — редкие пиксели
+                    }
+
+                    BlockState moldState;
+                    if (density == 2) moldState = moldHeavy;
+                    else if (density == 1) moldState = moldMedium;
+                    else moldState = moldLight;
+
+                    // Ставим плесень на пол (Y = WALL_MIN_Y, поверх пола)
+                    BlockPos floorCheck = new BlockPos(lx, WALL_MIN_Y, lz);
+                    if (chunk.getBlockState(floorCheck).isAir()) {
+                        chunk.setBlockState(mutable.set(lx, WALL_MIN_Y, lz), moldState, false);
                     }
                 }
             }

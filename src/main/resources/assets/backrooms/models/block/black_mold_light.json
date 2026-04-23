@@ -1,0 +1,17 @@
+{
+    "parent": "minecraft:block/block",
+    "textures": {
+        "mold": "backrooms:block/black_mold_light",
+        "particle": "backrooms:block/black_mold_light"
+    },
+    "elements": [
+        {
+            "from": [0, 0, 0],
+            "to": [16, 1, 16],
+            "faces": {
+                "up": { "uv": [0, 0, 16, 16], "texture": "#mold" },
+                "down": { "uv": [0, 0, 16, 16], "texture": "#mold" }
+            }
+        }
+    ]
+}

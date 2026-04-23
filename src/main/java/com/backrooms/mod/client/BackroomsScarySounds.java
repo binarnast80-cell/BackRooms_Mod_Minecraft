@@ -31,8 +31,15 @@ public class BackroomsScarySounds {
 
             boolean inBackrooms = client.player.getWorld().getRegistryKey() == ModDimensions.BACKROOMS_LEVEL_KEY;
 
-            if (inBackrooms && client.world.random.nextFloat() < PLAY_CHANCE) {
-                playRandomScarySound(client);
+            if (inBackrooms) {
+                // +5% шанс если игрок рядом с плесенью
+                float chance = PLAY_CHANCE;
+                if (com.backrooms.mod.block.BlackMoldBlock.isPlayerNearMold(client.player)) {
+                    chance *= 1.05f;
+                }
+                if (client.world.random.nextFloat() < chance) {
+                    playRandomScarySound(client);
+                }
             }
         });
     }
