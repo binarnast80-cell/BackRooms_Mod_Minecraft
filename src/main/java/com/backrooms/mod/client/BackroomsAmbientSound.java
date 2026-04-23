@@ -149,10 +149,10 @@ public class BackroomsAmbientSound {
                 
                 double dist = Math.sqrt(minDistanceSq);
                 if (dist <= 12.0) {
-                    targetVolume = 1.0f; // Максимальная громкость
+                    targetVolume = 0.35f; // Максимальная громкость снижена
                 } else if (dist <= 16.0) {
-                    // Плавное затухание от 12 до 16
-                    targetVolume = (float) (1.0 - (dist - 12.0) / 4.0);
+                    // Плавное затухание
+                    targetVolume = (float) (0.35f * (1.0 - (dist - 12.0) / 4.0));
                 } else {
                     targetVolume = 0.0f; // Не слышно
                 }
