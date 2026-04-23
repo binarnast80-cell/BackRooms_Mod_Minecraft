@@ -338,11 +338,13 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         // Базовый шум, масштаб 100 блоков (определяет общую форму зоны)
         double baseNoise = simpleNoise(wx / 100.0, wz / 100.0, WORLD_SEED + 500);
         
-        // Красивый "комковатый" высокочастотный шум для эффекта смешивания (масштаб 3.5 блока)
-        double detailNoise = simpleNoise(wx / 3.5, wz / 3.5, WORLD_SEED + 501); 
+        // Фрактальный шум для более органичного и красивого перехода (2 слоя)
+        double detail1 = simpleNoise(wx / 5.0, wz / 5.0, WORLD_SEED + 501);
+        double detail2 = simpleNoise(wx / 2.5, wz / 2.5, WORLD_SEED + 502);
+        double detailNoise = (detail1 + detail2 * 0.5) / 1.5;
         
-        // Умножая detailNoise на 0.16, мы создаем зону смешивания (дельта 0.16).
-        return baseNoise + (detailNoise - 0.5) * 0.16;
+        // Умножая detailNoise на 0.14, мы создаем зону смешивания примерно 7-16 блоков.
+        return baseNoise + (detailNoise - 0.5) * 0.14;
     }
 
     public static boolean isInfected(int wx, int wz) {

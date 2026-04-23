@@ -69,7 +69,7 @@ public class ModEntities {
         SpawnRestriction.register(WOODEN_STALKER,
                 SpawnRestriction.Location.ON_GROUND,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
-                (type, world, reason, pos, random) -> true);
+                (type, world, reason, pos, random) -> com.backrooms.mod.world.BackroomsChunkGenerator.isInfected(pos.getX(), pos.getZ()));
 
         BackroomsMod.LOGGER.info("Backrooms entities registered");
     }
