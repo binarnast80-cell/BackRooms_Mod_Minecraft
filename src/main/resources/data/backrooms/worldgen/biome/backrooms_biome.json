@@ -23,6 +23,12 @@
                 "maxCount": 1
             },
             {
+                "type": "backrooms:wooden_stalker",
+                "weight": 50,
+                "minCount": 1,
+                "maxCount": 1
+            },
+            {
                 "type": "backrooms:mimic",
                 "weight": 10,
                 "minCount": 1,
