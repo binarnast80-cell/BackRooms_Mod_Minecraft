@@ -305,18 +305,18 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         int cz = region.getCenterPos().getStartZ();
         Random random = new CheckedRandom(region.getSeed() + region.getCenterPos().toLong());
 
-        // Lurker: ~15% шанс на чанк — часто встречается
-        if (random.nextInt(7) == 0) {
+        // Lurker: ~1% шанс на чанк — очень редко
+        if (random.nextInt(100) == 0) {
             spawnEntitySafe(region, random, cx, cz, ModEntities.LURKER);
         }
 
-        // Howler: ~8% шанс на чанк — нередко
-        if (random.nextInt(12) == 0) {
+        // Howler: ~0.5% шанс на чанк — крайне редко
+        if (random.nextInt(200) == 0) {
             spawnEntitySafe(region, random, cx, cz, ModEntities.HOWLER);
         }
 
-        // Mimic: ~1% шанс на чанк — крайне редкий
-        if (random.nextInt(100) == 0) {
+        // Mimic: ~0.1% шанс на чанк — супер очень редко
+        if (random.nextInt(1000) == 0) {
             spawnEntitySafe(region, random, cx, cz, ModEntities.MIMIC);
         }
     }

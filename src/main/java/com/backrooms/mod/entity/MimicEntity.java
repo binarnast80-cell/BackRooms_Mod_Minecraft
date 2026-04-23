@@ -225,31 +225,10 @@ public class MimicEntity extends HostileEntity {
             this.getNavigation().stop();
             this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 60.0f, 60.0f);
 
-        } else if (dist < STALK_MIN) {
-            // Слишком близко — отступаем назад, сохраняя взгляд на игрока
-            Vec3d away = this.getPos().subtract(player.getPos()).normalize();
-            this.getNavigation().startMovingTo(
-                    this.getX() + away.x * 6, this.getY(), this.getZ() + away.z * 6,
-                    SPEED_STALK);
-            this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 30.0f, 30.0f);
-
-        } else if (dist < COPY_RANGE) {
-            // В зоне копирования — повторяем движения игрока с задержкой
-            followCopiedMovement();
-            this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 30.0f, 30.0f);
-
-        } else if (dist > STALK_IDEAL) {
-            // Далеко — медленно приближаемся
-            this.getNavigation().startMovingTo(player, SPEED_STALK);
-            this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 20.0f, 20.0f);
-
         } else {
-            // В идеальной зоне (STALK_MIN ... STALK_IDEAL) — стоим, наблюдаем
-            this.getNavigation().stop();
+            // Если игрок не смотрит — 100% преследует
+            this.getNavigation().startMovingTo(player, SPEED_HUNT);
             this.getLookControl().lookAt(player.getX(), player.getEyeY(), player.getZ(), 30.0f, 30.0f);
-
-            // Засада когда игрок отворачивается
-            tryAmbush(player);
         }
     }
 

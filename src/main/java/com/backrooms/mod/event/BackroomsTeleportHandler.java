@@ -5,8 +5,12 @@ import com.backrooms.mod.network.ModNetworking;
 import com.backrooms.mod.world.ModDimensions;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import com.backrooms.mod.block.ModBlocks;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -98,6 +102,16 @@ public class BackroomsTeleportHandler {
             // НЕ удаляем playerState — чтобы не телепортировать снова
         });
 
+        // Возрождение в Backrooms
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> {
+            if (oldPlayer.getWorld().getRegistryKey() == ModDimensions.BACKROOMS_LEVEL_KEY) {
+                ServerWorld backroomsWorld = newPlayer.getServer().getWorld(ModDimensions.BACKROOMS_LEVEL_KEY);
+                if (backroomsWorld != null) {
+                    teleportToSafeBackroomsSpot(newPlayer, backroomsWorld, oldPlayer.getPos());
+                }
+            }
+        });
+
         BackroomsMod.LOGGER.info("Backrooms teleport handler registered");
     }
 
@@ -113,5 +127,34 @@ public class BackroomsTeleportHandler {
         double spawnZ = 3.5;
 
         player.teleport(backroomsWorld, spawnX, spawnY, spawnZ, player.getYaw(), player.getPitch());
+    }
+
+    private static void teleportToSafeBackroomsSpot(ServerPlayerEntity player, ServerWorld world, Vec3d deathPos) {
+        java.util.Random random = new java.util.Random();
+        double startX = deathPos.x;
+        double startZ = deathPos.z;
+
+        for (int i = 0; i < 50; i++) {
+            double rx = startX + (random.nextDouble() * 200 - 100);
+            double rz = startZ + (random.nextDouble() * 200 - 100);
+            int x = (int) Math.floor(rx);
+            int z = (int) Math.floor(rz);
+
+            // Safe check: floor is backrooms_floor, Y=1 and Y=2 are air
+            BlockPos floor = new BlockPos(x, 0, z);
+            BlockPos feet = new BlockPos(x, 1, z);
+            BlockPos head = new BlockPos(x, 2, z);
+
+            if (world.getBlockState(floor).isOf(ModBlocks.BACKROOMS_FLOOR) &&
+                world.getBlockState(feet).isAir() &&
+                world.getBlockState(head).isAir()) {
+
+                player.teleport(world, rx, 1.0, rz, player.getYaw(), player.getPitch());
+                return;
+            }
+        }
+
+        // Fallback: spawn at original death pos but Y=1
+        player.teleport(world, startX, 1.0, startZ, player.getYaw(), player.getPitch());
     }
 }
