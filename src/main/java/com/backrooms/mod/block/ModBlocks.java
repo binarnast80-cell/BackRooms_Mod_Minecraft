@@ -52,12 +52,11 @@ public class ModBlocks {
                     .dropsNothing()
     );
 
-    // Потолок Backrooms — НЕУЯЗВИМ + светится (уровень света 12)
+    // Потолок Backrooms — НЕУЯЗВИМ, теперь НЕ светится (света нет)
     public static final Block BACKROOMS_CEILING = new Block(
             FabricBlockSettings.create()
                     .strength(-1.0f, 3600000.0f)
                     .sounds(BlockSoundGroup.GLASS)
-                    .luminance(state -> 12)
                     .dropsNothing()
     );
 
@@ -101,12 +100,12 @@ public class ModBlocks {
                     .jumpVelocityMultiplier(0.8f)
     );
 
-    // Лампа Backrooms — тусклый неоновый блок. Свет=7 (из 15) для глубоких теней.
+    // Лампа Backrooms — единственный источник света (уровень 12)
     public static final Block BACKROOMS_LAMP = new Block(
             FabricBlockSettings.create()
                     .strength(-1.0f, 3600000.0f)
                     .sounds(BlockSoundGroup.GLASS)
-                    .luminance(state -> 7)
+                    .luminance(state -> 12)
                     .dropsNothing()
     );
 
