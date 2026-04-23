@@ -323,18 +323,21 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
     // ======================== ГЕНЕРАЦИЯ ЗАРАЖЕННОЙ ЗОНЫ ========================
 
     private boolean isInfected(int wx, int wz) {
-        // Базовый плавный шум (масштаб ~80 блоков)
-        double baseNoise = simpleNoise(wx / 80.0, wz / 80.0, WORLD_SEED + 500);
+        // Базовый шум, масштаб 100 блоков (определяет общую форму зоны)
+        double baseNoise = simpleNoise(wx / 100.0, wz / 100.0, WORLD_SEED + 500);
         
-        // Высокочастотный шум для эффекта смешивания (dithering) на границах
-        double detailNoise = hashNoiseLocal(wx, wz, WORLD_SEED + 501); 
+        // Красивый "комковатый" высокочастотный шум для эффекта смешивания (масштаб 3.5 блока)
+        // Это создаст органичные пятна на границе, а не просто телевизионный пиксельный шум
+        double detailNoise = simpleNoise(wx / 3.5, wz / 3.5, WORLD_SEED + 501); 
         
-        // baseNoise меняется плавно от 0 до 1.
-        // Смешиваем их так, чтобы граница была "рваной"
-        double combined = baseNoise + (detailNoise - 0.5) * 0.3;
+        // Чтобы переходник был СТРОГО от 10 до 20 блоков:
+        // Градиент baseNoise (при масштабе 100) равен примерно 0.01-0.015 на блок.
+        // Умножая detailNoise на 0.16, мы создаем зону смешивания (дельта 0.16).
+        // В блоках это даст ровно ~10-15 блоков переходной зоны.
+        double combined = baseNoise + (detailNoise - 0.5) * 0.16;
         
-        // Если значение > 0.65 — это деревянная зона
-        return combined > 0.65;
+        // Если итоговое значение > 0.6 — это деревянная зона
+        return combined > 0.6;
     }
 
     private double simpleNoise(double x, double z, long seed) {
