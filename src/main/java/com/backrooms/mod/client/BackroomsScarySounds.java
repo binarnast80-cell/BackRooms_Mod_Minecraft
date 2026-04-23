@@ -23,7 +23,7 @@ public class BackroomsScarySounds {
         ModSounds.HOWLER_CRY
     };
 
-    private static final float PLAY_CHANCE = 0.0005f; // Шанс сильно уменьшен (примерно раз в 1-2 минуты)
+    private static final float PLAY_CHANCE = 0.00055f; // Чуть-чуть чаще (на 10% по просьбе пользователя)
 
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {

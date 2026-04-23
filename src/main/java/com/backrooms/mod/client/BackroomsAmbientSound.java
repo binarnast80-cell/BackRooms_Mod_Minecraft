@@ -73,6 +73,9 @@ public class BackroomsAmbientSound {
             this.attenuationType = SoundInstance.AttenuationType.NONE;
         }
 
+        private int tickCount = 0;
+        private float targetVolume = 0.5f;
+
         @Override
         public void tick() {
             if (player.isRemoved()) {
@@ -82,6 +85,42 @@ public class BackroomsAmbientSound {
             this.x = player.getX();
             this.y = player.getY();
             this.z = player.getZ();
+
+            tickCount++;
+            if (tickCount % 10 == 0) {
+                double minDistanceSq = 16 * 16 + 1;
+                net.minecraft.world.World world = player.getWorld();
+                int px = (int) player.getX();
+                int pz = (int) player.getZ();
+                
+                // Ищем ближайшую лампу на потолке (Y=106)
+                for (int dx = -16; dx <= 16; dx++) {
+                    for (int dz = -16; dz <= 16; dz++) {
+                        if (dx*dx + dz*dz > 16*16) continue;
+                        
+                        net.minecraft.util.math.BlockPos checkPos = new net.minecraft.util.math.BlockPos(px + dx, 106, pz + dz);
+                        if (world.getBlockState(checkPos).isOf(com.backrooms.mod.block.ModBlocks.BACKROOMS_LAMP)) {
+                            double distSq = dx*dx + dz*dz; // 2D distance
+                            if (distSq < minDistanceSq) {
+                                minDistanceSq = distSq;
+                            }
+                        }
+                    }
+                }
+                
+                double dist = Math.sqrt(minDistanceSq);
+                if (dist <= 12.0) {
+                    targetVolume = 1.0f; // Максимальная громкость
+                } else if (dist <= 16.0) {
+                    // Плавное затухание от 12 до 16
+                    targetVolume = (float) (1.0 - (dist - 12.0) / 4.0);
+                } else {
+                    targetVolume = 0.0f; // Не слышно
+                }
+            }
+            
+            // Плавное изменение громкости (интерполяция)
+            this.volume += (targetVolume - this.volume) * 0.1f;
         }
 
         @Override

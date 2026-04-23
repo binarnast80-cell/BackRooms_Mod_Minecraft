@@ -66,9 +66,19 @@ public class WoodenStalkerEntity extends HostileEntity {
         // Если заморожен — полностью блокируем передвижение
         if (this.isFrozen()) {
             super.travel(Vec3d.ZERO);
-        } else {
-            super.travel(movementInput);
+            return;
         }
+        
+        // Не даем выйти за пределы деревянной зоны
+        Vec3d nextPos = this.getPos().add(this.getVelocity());
+        if (!com.backrooms.mod.world.BackroomsChunkGenerator.isInfected((int)nextPos.x, (int)nextPos.z)) {
+            this.setVelocity(0, this.getVelocity().y, 0); // Останавливаем у невидимой стены
+            this.getNavigation().stop();
+            super.travel(Vec3d.ZERO);
+            return;
+        }
+
+        super.travel(movementInput);
     }
 
     // Проверка, смотрит ли игрок прямо на моба

@@ -22,6 +22,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.StateManager;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.random.Random;
+import net.minecraft.sound.SoundCategory;
+import com.backrooms.mod.sound.ModSounds;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -101,13 +108,41 @@ public class ModBlocks {
     );
 
     // Лампа Backrooms — единственный источник света (уровень 12)
+    public static final BooleanProperty LIT = Properties.LIT;
+
     public static final Block BACKROOMS_LAMP = new Block(
             FabricBlockSettings.create()
                     .strength(-1.0f, 3600000.0f)
                     .sounds(BlockSoundGroup.GLASS)
-                    .luminance(state -> 12)
+                    .luminance(state -> state.get(LIT) ? 12 : 0)
+                    .ticksRandomly()
                     .dropsNothing()
-    );
+    ) {
+        {
+            this.setDefaultState(this.stateManager.getDefaultState().with(LIT, true));
+        }
+
+        @Override
+        protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+            builder.add(LIT);
+        }
+
+        @Override
+        public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+            if (state.get(LIT) && random.nextInt(10) == 0) { // Примерно раз в несколько минут для каждой лампы
+                world.setBlockState(pos, state.with(LIT, false), 3);
+                world.playSound(null, pos, net.minecraft.sound.SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.5f, 2.6f + (world.random.nextFloat() - world.random.nextFloat()) * 0.8f);
+                world.scheduleBlockTick(pos, this, 6); // 0.3 секунды (6 тиков)
+            }
+        }
+
+        @Override
+        public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+            if (!state.get(LIT)) {
+                world.setBlockState(pos, state.with(LIT, true), 3);
+            }
+        }
+    };
 
     public static void register() {
         // Регистрация блоков

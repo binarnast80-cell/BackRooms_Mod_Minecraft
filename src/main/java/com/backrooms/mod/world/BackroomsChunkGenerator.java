@@ -118,6 +118,31 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
             }
         }
 
+        // ВТОРОЙ ПРОХОД: Расстановка настенных факелов в зараженной зоне (на высоте 3 блоков от пола)
+        for (int lx = 0; lx < 16; lx++) {
+            for (int lz = 0; lz < 16; lz++) {
+                int wx = startX + lx;
+                int wz = startZ + lz;
+                
+                if (!isInfected(wx, wz)) continue; // Только в зараженной деревянной зоне
+                if (isWall(wx, wz)) continue;      // Нам нужен пустой блок воздуха рядом со стеной
+                
+                long torchHash = mixHash(WORLD_SEED + 999, wx * 131L, wz * 137L);
+                if (Math.abs(torchHash) % 100 < 2) { // 2% шанс для свободного блока
+                    net.minecraft.util.math.Direction dir = null;
+                    if (isWall(wx - 1, wz)) dir = net.minecraft.util.math.Direction.EAST;
+                    else if (isWall(wx + 1, wz)) dir = net.minecraft.util.math.Direction.WEST;
+                    else if (isWall(wx, wz - 1)) dir = net.minecraft.util.math.Direction.SOUTH;
+                    else if (isWall(wx, wz + 1)) dir = net.minecraft.util.math.Direction.NORTH;
+
+                    if (dir != null) {
+                        BlockState torchState = Blocks.WALL_TORCH.getDefaultState().with(net.minecraft.state.property.Properties.HORIZONTAL_FACING, dir);
+                        chunk.setBlockState(mutable.set(lx, WALL_MIN_Y + 2, lz), torchState, false); // WALL_MIN_Y + 2 это 3-й блок стены
+                    }
+                }
+            }
+        }
+
         return CompletableFuture.completedFuture(chunk);
     }
 
