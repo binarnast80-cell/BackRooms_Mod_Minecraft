@@ -41,14 +41,14 @@ public class BackroomsFogMixin {
         if (!dimId.getNamespace().equals("backrooms")) return;
 
         // Плавное вычисление цвета:
-        // Обычные стены: #695e45 (0.41, 0.37, 0.27)
-        // Зараженная зона: очень тёмный мрачный коричневый (0.20, 0.17, 0.12)
+        // Обычные стены: #4d4533 (0.30, 0.27, 0.20) - ещё более темный и атмосферный
+        // Зараженная зона: #242018 (0.14, 0.12, 0.09)
         double inf = BackroomsChunkGenerator.getInfectionValue((int)camera.getPos().x, (int)camera.getPos().z);
         float t = MathHelper.clamp((float) ((inf - 0.45) / 0.20), 0.0f, 1.0f);
         
-        float r = MathHelper.lerp(t, 0.41f, 0.20f);
-        float g = MathHelper.lerp(t, 0.37f, 0.17f);
-        float b = MathHelper.lerp(t, 0.27f, 0.12f);
+        float r = MathHelper.lerp(t, 0.30f, 0.14f);
+        float g = MathHelper.lerp(t, 0.27f, 0.12f);
+        float b = MathHelper.lerp(t, 0.20f, 0.09f);
 
         RenderSystem.clearColor(r, g, b, 1.0f);
     }
@@ -70,11 +70,13 @@ public class BackroomsFogMixin {
 
         if (camera.getSubmersionType() != CameraSubmersionType.NONE) return;
 
-        // Делаем туман цилиндрическим (убирает эффект черной сферы вдалеке)
+        // Делаем туман цилиндрическим
         RenderSystem.setShaderFogShape(FogShape.CYLINDER);
 
-        // Мягкий плавный туман: чёткость до 15 блоков, blur с 15 до 35
-        RenderSystem.setShaderFogStart(15.0f);
-        RenderSystem.setShaderFogEnd(35.0f);
+        // Очень плавный и далёкий блюр (как в реальной жизни)
+        // Начинается с 5 блоков (эффект виден почти сразу)
+        // Заканчивается на 80 блоках (полная непроглядность далеко впереди)
+        RenderSystem.setShaderFogStart(5.0f);
+        RenderSystem.setShaderFogEnd(80.0f);
     }
 }
