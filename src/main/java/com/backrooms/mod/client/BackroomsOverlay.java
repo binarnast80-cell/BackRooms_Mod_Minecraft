@@ -26,7 +26,7 @@ public class BackroomsOverlay {
     private static boolean arrivalSoundPlayed = false;
 
     private static final int SINK_TICKS = 60;      // 3 сек погружения
-    private static final int ARRIVAL_TICKS = 20;    // 1 сек быстрое «открытие глаз»
+    private static final int ARRIVAL_TICKS = 60;    // 3 сек (fade-out + задержка звука)
     private static final int FADE_IN_TICKS = 40;
     private static final int FADE_OUT_TICKS = 40;
 
