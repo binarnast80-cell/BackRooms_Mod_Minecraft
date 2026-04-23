@@ -54,7 +54,7 @@ public class HowlerEntity extends HostileEntity {
     }
 
     @Override
-    protected SoundEvent getHurtSound() {
+    protected SoundEvent getHurtSound(net.minecraft.entity.damage.DamageSource source) {
         return ModSounds.HOWLER_CRY;
     }
 
