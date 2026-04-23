@@ -57,5 +57,14 @@
                 "name": "backrooms:scary_breath"
             }
         ]
+    },
+    "backrooms_arrival": {
+        "subtitle": "subtitles.backrooms.arrival",
+        "sounds": [
+            {
+                "name": "backrooms:backrooms_arrival",
+                "stream": true
+            }
+        ]
     }
 }

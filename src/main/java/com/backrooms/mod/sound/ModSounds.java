@@ -41,6 +41,10 @@ public class ModSounds {
     public static final Identifier SCARY_BREATH_ID = new Identifier(BackroomsMod.MOD_ID, "scary_breath");
     public static final SoundEvent SCARY_BREATH = SoundEvent.of(SCARY_BREATH_ID);
 
+    // Голос при прибытии в Backrooms ("Where am I?")
+    public static final Identifier BACKROOMS_ARRIVAL_ID = new Identifier(BackroomsMod.MOD_ID, "backrooms_arrival");
+    public static final SoundEvent BACKROOMS_ARRIVAL = SoundEvent.of(BACKROOMS_ARRIVAL_ID);
+
     public static void register() {
         Registry.register(Registries.SOUND_EVENT, BACKROOMS_SOUND_ID, BACKROOMS_SOUND);
         Registry.register(Registries.SOUND_EVENT, LAMP_HUM_ID, LAMP_HUM);
@@ -51,6 +55,7 @@ public class ModSounds {
         Registry.register(Registries.SOUND_EVENT, SCARY_SOUND_ID, SCARY_SOUND);
         Registry.register(Registries.SOUND_EVENT, SCARY_FOOTSTEPS_ID, SCARY_FOOTSTEPS);
         Registry.register(Registries.SOUND_EVENT, SCARY_BREATH_ID, SCARY_BREATH);
+        Registry.register(Registries.SOUND_EVENT, BACKROOMS_ARRIVAL_ID, BACKROOMS_ARRIVAL);
 
         BackroomsMod.LOGGER.info("Backrooms sounds registered");
     }
