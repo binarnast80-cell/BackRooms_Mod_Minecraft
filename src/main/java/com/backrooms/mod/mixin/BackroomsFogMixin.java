@@ -41,14 +41,14 @@ public class BackroomsFogMixin {
         if (!dimId.getNamespace().equals("backrooms")) return;
 
         // Плавное вычисление цвета:
-        // Обычные стены (inf < 0.45): #C4A86A (0.769, 0.659, 0.416)
-        // Зараженная зона дерева (inf > 0.65): Тёмно-коричневый (0.35, 0.25, 0.15)
+        // Обычные стены: тусклый серо-коричневый (0.25, 0.22, 0.18)
+        // Зараженная зона: очень тёмный мрачный коричневый (0.12, 0.08, 0.05)
         double inf = BackroomsChunkGenerator.getInfectionValue((int)camera.getPos().x, (int)camera.getPos().z);
         float t = MathHelper.clamp((float) ((inf - 0.45) / 0.20), 0.0f, 1.0f);
         
-        float r = MathHelper.lerp(t, 0.769f, 0.350f);
-        float g = MathHelper.lerp(t, 0.659f, 0.250f);
-        float b = MathHelper.lerp(t, 0.416f, 0.150f);
+        float r = MathHelper.lerp(t, 0.25f, 0.12f);
+        float g = MathHelper.lerp(t, 0.22f, 0.08f);
+        float b = MathHelper.lerp(t, 0.18f, 0.05f);
 
         RenderSystem.clearColor(r, g, b, 1.0f);
     }
