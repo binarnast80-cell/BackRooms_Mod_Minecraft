@@ -141,18 +141,35 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
      * Слой 4: Столбы — одиночные колонны для атмосферы
      */
     private boolean isWall(int wx, int wz) {
-        // === СЛОЙ 1: Основные стены (каждые 32 блока) ===
+        // === СЛОЙ 5: Клеточная генерация (плотная сетка коридоров) ===
+        // В 30% зон размером 48x48 генерируется только клеточная структура
+        int cellZoneX = Math.floorDiv(wx, 48);
+        int cellZoneZ = Math.floorDiv(wz, 48);
+        long cellZoneHash = mixHash(WORLD_SEED + 300, cellZoneX * 8191L, cellZoneZ * 8111L);
+        if (Math.abs(cellZoneHash) % 10 < 3) {
+            // Сетка 7х7: 6 блоков - сплошная стена, 1 блок - коридор (воздух)
+            int modX = Math.floorMod(wx, 7);
+            int modZ = Math.floorMod(wz, 7);
+            
+            if (modX < 6 && modZ < 6) {
+                return true; // Блок-колонна 6x6
+            } else {
+                return false; // Принудительно коридор 1-блок шириной (игнорирует другие слои)
+            }
+        }
+
+        // === СЛОЙ 1: Основные стены (каждые 24 блока вместо 32) ===
         // Создают огромные секции — основной каркас лабиринта
-        if (isGridWall(wx, wz, 32, 2, WORLD_SEED, 5, true)) {
+        if (isGridWall(wx, wz, 24, 2, WORLD_SEED, 5, true)) {
             return true;
         }
 
-        // === СЛОЙ 2: Средние стены (каждые 16 блоков) ===
+        // === СЛОЙ 2: Средние стены (каждые 12 блоков вместо 16) ===
         // Длинные коридоры и средние комнаты — 60% вероятность существования
-        if (isGridWall(wx, wz, 16, 1, WORLD_SEED + 1, 4, false)) {
+        if (isGridWall(wx, wz, 12, 1, WORLD_SEED + 1, 4, false)) {
             // Проверяем — эта стена нужна в данном секторе?
-            int sectorX = Math.floorDiv(wx, 32);
-            int sectorZ = Math.floorDiv(wz, 32);
+            int sectorX = Math.floorDiv(wx, 24);
+            int sectorZ = Math.floorDiv(wz, 24);
             long sectorHash = mixHash(WORLD_SEED + 100, sectorX * 7919L, sectorZ * 7927L);
             if (Math.abs(sectorHash) % 10 < 6) { // 60% секторов имеют средние стены
                 return true;
@@ -160,7 +177,7 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
         }
 
         // === СЛОЙ 3: Мелкие перегородки (каждые 8 блоков) ===
-        // Офисные кабинки — только в "плотных" зонах (~25%)
+        // Офисные кабинки — только в "плотных" зонах (~20%)
         if (isGridWall(wx, wz, 8, 1, WORLD_SEED + 2, 3, false)) {
             int zoneX = Math.floorDiv(wx, 48);
             int zoneZ = Math.floorDiv(wz, 48);
