@@ -38,10 +38,19 @@ public class ModEntities {
                     .trackRangeChunks(10)
                     .build());
 
+    public static final EntityType<WoodenStalkerEntity> WOODEN_STALKER = Registry.register(
+            Registries.ENTITY_TYPE,
+            new Identifier(BackroomsMod.MOD_ID, "wooden_stalker"),
+            FabricEntityTypeBuilder.create(SpawnGroup.MONSTER, WoodenStalkerEntity::new)
+                    .dimensions(EntityDimensions.fixed(0.6f, 1.85f)) // Немного меньше, чтобы не застревал
+                    .trackRangeChunks(10)
+                    .build());
+
     public static void register() {
         FabricDefaultAttributeRegistry.register(LURKER, LurkerEntity.createLurkerAttributes());
         FabricDefaultAttributeRegistry.register(HOWLER, HowlerEntity.createHowlerAttributes());
         FabricDefaultAttributeRegistry.register(MIMIC, MimicEntity.createMimicAttributes());
+        FabricDefaultAttributeRegistry.register(WOODEN_STALKER, WoodenStalkerEntity.createWoodenStalkerAttributes());
 
         // Разрешаем спавн при любом уровне света (Backrooms всегда освещены)
         SpawnRestriction.register(LURKER,
@@ -54,6 +63,10 @@ public class ModEntities {
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 (type, world, reason, pos, random) -> true);
         SpawnRestriction.register(MIMIC,
+                SpawnRestriction.Location.ON_GROUND,
+                Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
+                (type, world, reason, pos, random) -> true);
+        SpawnRestriction.register(WOODEN_STALKER,
                 SpawnRestriction.Location.ON_GROUND,
                 Heightmap.Type.MOTION_BLOCKING_NO_LEAVES,
                 (type, world, reason, pos, random) -> true);
