@@ -126,13 +126,24 @@ public class ModBlocks {
         protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
             builder.add(LIT);
         }
+        @Override
+        public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+            super.onBlockAdded(state, world, pos, oldState, notify);
+            // Запускаем цепочку мигания сразу (1-16 сек задержка)
+            if (!world.isClient() && state.get(LIT)) {
+                ServerWorld sw = (ServerWorld) world;
+                if (!sw.getBlockTickScheduler().isQueued(pos, this)) {
+                    int delay = 20 + sw.random.nextInt(301); // 1-16 секунд
+                    sw.scheduleBlockTick(pos, this, delay);
+                }
+            }
+        }
 
         @Override
         public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-            // randomTick запускает цепочку мигания (если ещё не запущена)
+            // Подстраховка: если цепочка не запустилась через onBlockAdded
             if (state.get(LIT) && !world.getBlockTickScheduler().isQueued(pos, this)) {
-                // Следующее мигание через 2-7 секунд (40-140 тиков)
-                int delay = 40 + random.nextInt(101);
+                int delay = 20 + random.nextInt(101);
                 world.scheduleBlockTick(pos, this, delay);
             }
         }
