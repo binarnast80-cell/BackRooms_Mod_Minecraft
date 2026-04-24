@@ -6,7 +6,6 @@ import com.backrooms.mod.world.ModDimensions;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
-import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -21,25 +20,24 @@ import java.util.UUID;
 
 /**
  * Обработчик телепортации в Backrooms.
- * 
+ *
+ * Триггер: игрок получает деревянную кирку в инвентарь (любым способом).
  * Последовательность:
- * 1. Через 20 секунд — игроку выдаётся деревянная кирка
- * 2. Начинается погружение: игрок медленно тонет в земле 3 секунды
- *    (чёрные частицы + плавное затемнение экрана)
- * 3. Экран полностью чёрный → телепорт в Backrooms
- * 4. Резкое «открытие глаз» + звук "Where am I?"
+ * 1. Обнаружена кирка → удаляем её, начинается погружение (3 сек)
+ * 2. Чёрные частицы + плавное затемнение экрана
+ * 3. Экран чёрный → телепорт в Backrooms
+ * 4. Резкое «открытие глаз» + звук "Where am I?" через 1.5 сек
  */
 public class BackroomsTeleportHandler {
 
-    private static final int TELEPORT_DELAY_TICKS = 400; // 20 сек × 20 тиков
     private static final int SINK_DURATION_TICKS = 60;   // 3 сек погружения
-    private static final int EYES_OPEN_DELAY = 20;       // 1 сек задержка перед открытием глаз
+    private static final int EYES_OPEN_DELAY = 20;       // 1 сек перед открытием глаз
 
     // Состояния:
-    // 0 = отсчёт до начала
-    // 1 = выдана кирка, начинается погружение + fade-in
-    // 2 = погружение завершено, телепорт, ждём перед fade-out
-    // 3 = fade-out + звук прибытия
+    // 0 = ожидание триггера (деревянная кирка в инвентаре)
+    // 1 = погружение (3 сек)
+    // 2 = телепортирован, ждём перед fade-out
+    // 3 = fade-out + звук
     // 4 = завершено
     private static final Map<UUID, Integer> playerState = new HashMap<>();
     private static final Map<UUID, Integer> playerTicks = new HashMap<>();
@@ -53,46 +51,48 @@ public class BackroomsTeleportHandler {
 
                 if (state == 4) continue;
 
-                int ticks = playerTicks.getOrDefault(uuid, 0) + 1;
-                playerTicks.put(uuid, ticks);
-
                 switch (state) {
-                    case 0: // Отсчёт в обычном мире
+                    case 0: // Ждём деревянную кирку в инвентаре
+                        // Уже в Backrooms — пропускаем
                         if (player.getWorld().getRegistryKey() == ModDimensions.BACKROOMS_LEVEL_KEY) {
                             playerState.put(uuid, 4);
                             break;
                         }
-                        if (ticks >= TELEPORT_DELAY_TICKS) {
-                            // Выдаём деревянную кирку
-                            player.getInventory().insertStack(new ItemStack(Items.WOODEN_PICKAXE));
-                            
-                            // Запоминаем начальную Y позицию
+
+                        // Проверяем есть ли деревянная кирка в инвентаре
+                        int pickaxeSlot = findWoodenPickaxe(player);
+                        if (pickaxeSlot >= 0) {
+                            // Удаляем кирку из инвентаря
+                            player.getInventory().removeStack(pickaxeSlot, 1);
+
+                            // Запоминаем Y и начинаем погружение
                             playerStartY.put(uuid, player.getY());
-                            
-                            // Начинаем затемнение (3 секунды)
                             ModNetworking.sendSinkFadePacket(player);
-                            
+
                             playerState.put(uuid, 1);
                             playerTicks.put(uuid, 0);
-                            BackroomsMod.LOGGER.info("Sinking started for: {}", player.getName().getString());
+                            BackroomsMod.LOGGER.info("Wooden pickaxe detected! Sinking started for: {}",
+                                    player.getName().getString());
                         }
                         break;
 
-                    case 1: // Погружение — игрок медленно тонет
+                    case 1: // Погружение
+                        int ticks1 = playerTicks.getOrDefault(uuid, 0) + 1;
+                        playerTicks.put(uuid, ticks1);
+
                         double startY = playerStartY.getOrDefault(uuid, player.getY());
-                        
-                        if (ticks <= SINK_DURATION_TICKS) {
-                            // Медленно опускаем игрока (примерно 2 блока за 3 сек)
-                            double progress = (double) ticks / SINK_DURATION_TICKS;
-                            double sinkDepth = progress * 2.0; // Тонет на 2 блока
+
+                        if (ticks1 <= SINK_DURATION_TICKS) {
+                            double progress = (double) ticks1 / SINK_DURATION_TICKS;
+                            double sinkDepth = progress * 2.0;
                             double targetY = startY - sinkDepth;
-                            
+
                             player.setVelocity(0, 0, 0);
                             player.teleport(player.getServerWorld(), player.getX(), targetY, player.getZ(),
                                     player.getYaw(), player.getPitch());
                             player.velocityModified = true;
-                            
-                            // Чёрные частицы вокруг игрока (как SCP-106)
+
+                            // Чёрные частицы (SCP-106 стиль)
                             ServerWorld world = player.getServerWorld();
                             for (int i = 0; i < 5; i++) {
                                 double px = player.getX() + (world.random.nextDouble() - 0.5) * 2;
@@ -101,7 +101,6 @@ public class BackroomsTeleportHandler {
                                 world.spawnParticles(ParticleTypes.SQUID_INK, px, py, pz,
                                         1, 0.1, 0.1, 0.1, 0.02);
                             }
-                            // Дополнительные дымовые частицы
                             for (int i = 0; i < 3; i++) {
                                 double px = player.getX() + (world.random.nextDouble() - 0.5) * 1.5;
                                 double py = player.getY() + 0.5;
@@ -110,7 +109,6 @@ public class BackroomsTeleportHandler {
                                         1, 0.05, 0.1, 0.05, 0.01);
                             }
                         } else {
-                            // Погружение завершено — телепорт
                             teleportToBackrooms(player);
                             playerState.put(uuid, 2);
                             playerTicks.put(uuid, 0);
@@ -118,18 +116,23 @@ public class BackroomsTeleportHandler {
                         }
                         break;
 
-                    case 2: // Телепортирован, ждём перед «открытием глаз»
-                        if (ticks >= EYES_OPEN_DELAY) {
-                            // Резко снимаем чёрный экран + играем звук прибытия
+                    case 2: // Телепортирован, ждём перед открытием глаз
+                        int ticks2 = playerTicks.getOrDefault(uuid, 0) + 1;
+                        playerTicks.put(uuid, ticks2);
+
+                        if (ticks2 >= EYES_OPEN_DELAY) {
                             ModNetworking.sendArrivalPacket(player);
                             playerState.put(uuid, 3);
                             playerTicks.put(uuid, 0);
-                            BackroomsMod.LOGGER.info("Eyes open + arrival sound for: {}", player.getName().getString());
+                            BackroomsMod.LOGGER.info("Eyes open for: {}", player.getName().getString());
                         }
                         break;
 
                     case 3: // Ждём завершения fade-out
-                        if (ticks >= 40) { // 2 сек fade-out
+                        int ticks3 = playerTicks.getOrDefault(uuid, 0) + 1;
+                        playerTicks.put(uuid, ticks3);
+
+                        if (ticks3 >= 60) {
                             playerState.put(uuid, 4);
                             playerStartY.remove(uuid);
                             BackroomsMod.LOGGER.info("Backrooms sequence complete for: {}",
@@ -157,6 +160,19 @@ public class BackroomsTeleportHandler {
         });
 
         BackroomsMod.LOGGER.info("Backrooms teleport handler registered");
+    }
+
+    /**
+     * Ищет деревянную кирку в инвентаре игрока.
+     * @return индекс слота или -1 если не найдена
+     */
+    private static int findWoodenPickaxe(ServerPlayerEntity player) {
+        for (int i = 0; i < player.getInventory().size(); i++) {
+            if (player.getInventory().getStack(i).isOf(Items.WOODEN_PICKAXE)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     private static void teleportToBackrooms(ServerPlayerEntity player) {
