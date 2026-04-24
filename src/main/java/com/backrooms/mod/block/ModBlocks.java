@@ -133,7 +133,7 @@ public class ModBlocks {
             if (!world.isClient() && state.get(LIT)) {
                 ServerWorld sw = (ServerWorld) world;
                 if (!sw.getBlockTickScheduler().isQueued(pos, this)) {
-                    int delay = 20 + sw.random.nextInt(301); // 1-16 секунд
+                    int delay = 20 + sw.random.nextInt(261); // 1-14 секунд
                     sw.scheduleBlockTick(pos, this, delay);
                 }
             }

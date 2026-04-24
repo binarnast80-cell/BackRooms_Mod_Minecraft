@@ -31,7 +31,7 @@ import java.util.UUID;
 public class BackroomsTeleportHandler {
 
     private static final int SINK_DURATION_TICKS = 60;   // 3 сек погружения
-    private static final int EYES_OPEN_DELAY = 20;       // 1 сек перед открытием глаз
+    private static final int EYES_OPEN_DELAY = 60;       // 3 сек перед открытием глаз (даём время на загрузку мира)
 
     // Состояния:
     // 0 = ожидание триггера (деревянная кирка в инвентаре)
