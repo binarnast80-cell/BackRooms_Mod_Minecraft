@@ -66,5 +66,14 @@
                 "stream": true
             }
         ]
+    },
+    "stalker_footsteps": {
+        "subtitle": "subtitles.backrooms.stalker_footsteps",
+        "sounds": [
+            {
+                "name": "backrooms:stalker_footsteps",
+                "stream": true
+            }
+        ]
     }
 }

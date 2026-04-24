@@ -45,6 +45,10 @@ public class ModSounds {
     public static final Identifier BACKROOMS_ARRIVAL_ID = new Identifier(BackroomsMod.MOD_ID, "backrooms_arrival");
     public static final SoundEvent BACKROOMS_ARRIVAL = SoundEvent.of(BACKROOMS_ARRIVAL_ID);
 
+    // Звук шагов WoodenStalker (непрерывный, зацикленный)
+    public static final Identifier STALKER_FOOTSTEPS_ID = new Identifier(BackroomsMod.MOD_ID, "stalker_footsteps");
+    public static final SoundEvent STALKER_FOOTSTEPS = SoundEvent.of(STALKER_FOOTSTEPS_ID);
+
     public static void register() {
         Registry.register(Registries.SOUND_EVENT, BACKROOMS_SOUND_ID, BACKROOMS_SOUND);
         Registry.register(Registries.SOUND_EVENT, LAMP_HUM_ID, LAMP_HUM);
@@ -56,6 +60,7 @@ public class ModSounds {
         Registry.register(Registries.SOUND_EVENT, SCARY_FOOTSTEPS_ID, SCARY_FOOTSTEPS);
         Registry.register(Registries.SOUND_EVENT, SCARY_BREATH_ID, SCARY_BREATH);
         Registry.register(Registries.SOUND_EVENT, BACKROOMS_ARRIVAL_ID, BACKROOMS_ARRIVAL);
+        Registry.register(Registries.SOUND_EVENT, STALKER_FOOTSTEPS_ID, STALKER_FOOTSTEPS);
 
         BackroomsMod.LOGGER.info("Backrooms sounds registered");
     }
