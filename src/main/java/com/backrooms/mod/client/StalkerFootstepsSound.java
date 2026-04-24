@@ -22,7 +22,7 @@ public class StalkerFootstepsSound extends MovingSoundInstance {
     private final WoodenStalkerEntity stalker;
     private float targetVolume = 0.0f;
     private static final float FADE_SPEED = 0.05f;
-    private static final float MAX_VOLUME = 0.446f;
+    private static final float MAX_VOLUME = 0.50f;     // +12%
     private static final float MOVE_THRESHOLD = 0.01f;
     private static final double MAX_DISTANCE = 20.0;
     private static final double HEAR_DISTANCE = 18.0;
