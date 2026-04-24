@@ -11,34 +11,31 @@ import net.minecraft.util.math.random.Random;
 /**
  * Непрерывный звук шагов WoodenStalker.
  *
- * Ключевые особенности:
  * - Звук НЕ сбрасывается при остановке моба
- * - Когда моб стоит → громкость плавно затухает
- * - Когда моб идёт → громкость плавно нарастает
- * - Звук зациклен и продолжается непрерывно
- * - Привязан к позиции сущности (3D звук)
- * - Начинает играть с 20 блоков, слышен с 18 блоков
- * - Чем дальше — тем тише (плавное затухание по расстоянию)
+ * - Плавное затухание при остановке, плавное нарастание при ходьбе
+ * - Зациклен, 3D-позиционирование
+ * - Слышен с 18 блоков, играет с 20 блоков
+ * - Чем ближе — тем громче (плавный градиент)
  */
 public class StalkerFootstepsSound extends MovingSoundInstance {
 
     private final WoodenStalkerEntity stalker;
     private float targetVolume = 0.0f;
-    private static final float FADE_SPEED = 0.05f;     // Более плавное затухание
-    private static final float MAX_VOLUME = 0.446f;    // Снижена ещё на 15% (0.525 * 0.85)
+    private static final float FADE_SPEED = 0.05f;
+    private static final float MAX_VOLUME = 0.446f;
     private static final float MOVE_THRESHOLD = 0.01f;
-    private static final float PLAY_DISTANCE = 20.0f;  // Начало воспроизведения (20 блоков)
-    private static final float HEAR_DISTANCE = 18.0f;  // Слышимый порог (18 блоков)
+    private static final double MAX_DISTANCE = 20.0;
+    private static final double HEAR_DISTANCE = 18.0;
 
     public StalkerFootstepsSound(WoodenStalkerEntity stalker) {
         super(ModSounds.STALKER_FOOTSTEPS, SoundCategory.HOSTILE, Random.create());
         this.stalker = stalker;
         this.repeat = true;
-        this.volume = 0.0f;
+        this.volume = 0.001f; // Минимальная ненулевая громкость для инициализации
         this.x = stalker.getX();
         this.y = stalker.getY();
         this.z = stalker.getZ();
-        this.attenuationType = SoundInstance.AttenuationType.NONE; // Ручное управление громкостью
+        this.attenuationType = SoundInstance.AttenuationType.LINEAR;
     }
 
     @Override
@@ -55,38 +52,40 @@ public class StalkerFootstepsSound extends MovingSoundInstance {
 
         // Расстояние до игрока
         MinecraftClient client = MinecraftClient.getInstance();
-        double distance = PLAY_DISTANCE;
+        double distance = MAX_DISTANCE + 1;
         if (client.player != null) {
             distance = client.player.getPos().distanceTo(stalker.getPos());
         }
 
-        // Определяем, двигается ли моб
-        double speed = stalker.getVelocity().horizontalLengthSquared();
-        boolean isMoving = speed > MOVE_THRESHOLD * MOVE_THRESHOLD;
-
-        // Множитель громкости по расстоянию:
-        // > 20 блоков = 0 (не слышно)
-        // 18-20 блоков = нарастает от 0 до начального уровня
-        // 0-18 блоков = плавно нарастает до максимума (чем ближе, тем громче)
+        // Множитель по расстоянию
         float distanceFactor;
-        if (distance > PLAY_DISTANCE) {
+        if (distance > MAX_DISTANCE) {
             distanceFactor = 0.0f;
         } else if (distance > HEAR_DISTANCE) {
-            // Плавный переход от 0 до ~0.15 между 20 и 18 блоками
-            distanceFactor = (float) ((PLAY_DISTANCE - distance) / (PLAY_DISTANCE - HEAR_DISTANCE)) * 0.15f;
+            // 20→18 блоков: от 0 до 0.15
+            distanceFactor = (float) ((MAX_DISTANCE - distance) / (MAX_DISTANCE - HEAR_DISTANCE)) * 0.15f;
         } else {
-            // От 18 блоков до 0: плавно от 0.15 до 1.0
+            // 18→0 блоков: от 0.15 до 1.0
             distanceFactor = 0.15f + (float) ((HEAR_DISTANCE - distance) / HEAR_DISTANCE) * 0.85f;
         }
 
-        // Целевая громкость: движение × расстояние
-        targetVolume = isMoving ? MAX_VOLUME * distanceFactor : 0.0f;
+        // Движение моба
+        double speed = stalker.getVelocity().horizontalLengthSquared();
+        boolean isMoving = speed > MOVE_THRESHOLD * MOVE_THRESHOLD;
 
-        // Плавная интерполяция (более мягкое затухание)
+        // Целевая громкость
+        targetVolume = isMoving ? MAX_VOLUME * distanceFactor : 0.001f;
+
+        // Плавная интерполяция
         if (this.volume < targetVolume) {
             this.volume = Math.min(targetVolume, this.volume + FADE_SPEED);
         } else if (this.volume > targetVolume) {
             this.volume = Math.max(targetVolume, this.volume - FADE_SPEED);
+        }
+
+        // Не даём упасть ниже минимума (чтобы звук не "умер")
+        if (this.volume < 0.001f) {
+            this.volume = 0.001f;
         }
     }
 
