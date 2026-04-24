@@ -22,7 +22,7 @@ public class StalkerFootstepsSound extends MovingSoundInstance {
     private final WoodenStalkerEntity stalker;
     private float targetVolume = 0.0f;
     private static final float FADE_SPEED = 0.08f;    // Скорость затухания/нарастания
-    private static final float MAX_VOLUME = 0.7f;     // Максимальная громкость
+    private static final float MAX_VOLUME = 0.525f;    // Максимальная громкость (снижена на 25%)
     private static final float MOVE_THRESHOLD = 0.01f; // Порог скорости для определения движения
 
     public StalkerFootstepsSound(WoodenStalkerEntity stalker) {
