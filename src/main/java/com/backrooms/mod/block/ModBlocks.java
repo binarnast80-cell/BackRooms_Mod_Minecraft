@@ -129,17 +129,58 @@ public class ModBlocks {
 
         @Override
         public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-            if (state.get(LIT) && random.nextInt(10) == 0) { // Примерно раз в несколько минут для каждой лампы
-                world.setBlockState(pos, state.with(LIT, false), 3);
-                world.playSound(null, pos, net.minecraft.sound.SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT, SoundCategory.BLOCKS, 0.5f, 2.6f + (world.random.nextFloat() - world.random.nextFloat()) * 0.8f);
-                world.scheduleBlockTick(pos, this, 6); // 0.3 секунды (6 тиков)
+            // randomTick запускает цепочку мигания (если ещё не запущена)
+            if (state.get(LIT) && !world.getBlockTickScheduler().isQueued(pos, this)) {
+                // Следующее мигание через 2-7 секунд (40-140 тиков)
+                int delay = 40 + random.nextInt(101);
+                world.scheduleBlockTick(pos, this, delay);
             }
         }
 
         @Override
         public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-            if (!state.get(LIT)) {
+            if (state.get(LIT)) {
+                // === МИГАНИЕ: выключаем лампу ===
+                // Выключаем эту лампу
+                world.setBlockState(pos, state.with(LIT, false), 3);
+                world.playSound(null, pos, net.minecraft.sound.SoundEvents.BLOCK_REDSTONE_TORCH_BURNOUT,
+                        SoundCategory.BLOCKS, 0.3f, 2.6f + (world.random.nextFloat() - world.random.nextFloat()) * 0.8f);
+
+                // Синхронно выключаем все соседние лампы в ряду (одна "лампа" = несколько блоков в линию)
+                for (net.minecraft.util.math.Direction dir : new net.minecraft.util.math.Direction[]{
+                        net.minecraft.util.math.Direction.NORTH, net.minecraft.util.math.Direction.SOUTH,
+                        net.minecraft.util.math.Direction.EAST, net.minecraft.util.math.Direction.WEST}) {
+                    BlockPos neighbor = pos.offset(dir);
+                    BlockState neighborState = world.getBlockState(neighbor);
+                    if (neighborState.isOf(this) && neighborState.get(LIT)) {
+                        world.setBlockState(neighbor, neighborState.with(LIT, false), 3);
+                        // Включить обратно одновременно с основной лампой
+                        int flickDuration = 3 + random.nextInt(5); // 0.15-0.4 сек
+                        world.scheduleBlockTick(neighbor, this, flickDuration);
+                    }
+                }
+
+                // Включить обратно через короткий момент (0.15-0.4 сек)
+                int flickDuration = 3 + random.nextInt(5);
+                world.scheduleBlockTick(pos, this, flickDuration);
+            } else {
+                // === ВКЛЮЧЕНИЕ обратно ===
                 world.setBlockState(pos, state.with(LIT, true), 3);
+
+                // Включаем соседние лампы тоже (на случай если они ещё выключены)
+                for (net.minecraft.util.math.Direction dir : new net.minecraft.util.math.Direction[]{
+                        net.minecraft.util.math.Direction.NORTH, net.minecraft.util.math.Direction.SOUTH,
+                        net.minecraft.util.math.Direction.EAST, net.minecraft.util.math.Direction.WEST}) {
+                    BlockPos neighbor = pos.offset(dir);
+                    BlockState neighborState = world.getBlockState(neighbor);
+                    if (neighborState.isOf(this) && !neighborState.get(LIT)) {
+                        world.setBlockState(neighbor, neighborState.with(LIT, true), 3);
+                    }
+                }
+
+                // Планируем следующее мигание через 2-7 секунд
+                int nextFlicker = 40 + random.nextInt(101);
+                world.scheduleBlockTick(pos, this, nextFlicker);
             }
         }
     };
