@@ -62,8 +62,7 @@
         "subtitle": "subtitles.backrooms.arrival",
         "sounds": [
             {
-                "name": "backrooms:backrooms_arrival",
-                "stream": true
+                "name": "backrooms:backrooms_arrival"
             }
         ]
     },
