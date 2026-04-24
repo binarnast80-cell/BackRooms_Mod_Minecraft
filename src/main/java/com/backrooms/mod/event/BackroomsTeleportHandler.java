@@ -49,7 +49,7 @@ public class BackroomsTeleportHandler {
                 UUID uuid = player.getUuid();
                 int state = playerState.getOrDefault(uuid, 0);
 
-                if (state == 4) continue;
+                if (state >= 4) continue;
 
                 switch (state) {
                     case 0: // Ждём деревянную кирку в инвентаре
@@ -121,23 +121,37 @@ public class BackroomsTeleportHandler {
                         playerTicks.put(uuid, ticks2);
 
                         if (ticks2 >= EYES_OPEN_DELAY) {
+                            // Снимаем чёрный экран
                             ModNetworking.sendArrivalPacket(player);
+                            ModNetworking.sendFadePacket(player, false);
+
                             playerState.put(uuid, 3);
                             playerTicks.put(uuid, 0);
                             BackroomsMod.LOGGER.info("Eyes open for: {}", player.getName().getString());
                         }
                         break;
 
-                    case 3: // Ждём завершения fade-out
+                    case 3: // Ждём завершения fade-out (3 сек) + 1 сек пауза, потом звук
                         int ticks3 = playerTicks.getOrDefault(uuid, 0) + 1;
                         playerTicks.put(uuid, ticks3);
 
-                        if (ticks3 >= 60) {
+                        // Fade-out длится 60 тиков (3 сек) + 20 тиков (1 сек пауза) = 80 тиков
+                        if (ticks3 >= 80) {
+                            // Звук прибытия через 1 сек после того как экран полностью прояснился
+                            player.getServerWorld().playSound(null, player.getBlockPos(),
+                                    com.backrooms.mod.sound.ModSounds.BACKROOMS_ARRIVAL,
+                                    net.minecraft.sound.SoundCategory.MASTER,
+                                    1.0f, 1.0f);
+
                             playerState.put(uuid, 4);
-                            playerStartY.remove(uuid);
-                            BackroomsMod.LOGGER.info("Backrooms sequence complete for: {}",
-                                    player.getName().getString());
+                            playerTicks.put(uuid, 0);
+                            BackroomsMod.LOGGER.info("Arrival sound played for: {}", player.getName().getString());
                         }
+                        break;
+
+                    case 4: // Завершено
+                        playerStartY.remove(uuid);
+                        // Не меняем состояние — остаёмся в 4 навсегда
                         break;
                 }
             }
