@@ -160,6 +160,8 @@ public class BackroomsAmbientSound {
             
             // Плавное изменение громкости (интерполяция)
             this.volume += (targetVolume - this.volume) * 0.1f;
+            // Не даём упасть до 0, иначе Minecraft убьёт звук
+            if (this.volume < 0.001f) this.volume = 0.001f;
         }
 
         @Override

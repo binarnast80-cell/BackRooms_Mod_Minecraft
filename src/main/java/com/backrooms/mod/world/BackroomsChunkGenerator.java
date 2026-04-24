@@ -199,7 +199,7 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
 
         // Хеш ячейки — определяет есть ли лампа в этой ячейке
         long cellHash = mixHash(WORLD_SEED + 777, cellX * 31337L, cellZ * 27191L);
-        boolean cellHasLamp = (Math.abs(cellHash) % 100) < 12; // ~12% ячеек имеют лампы
+        boolean cellHasLamp = (Math.abs(cellHash) % 100) < 14; // ~14% ячеек имеют лампы (+13%)
         if (!cellHasLamp) return false;
 
         // Лампа по центру ячейки: пара из 2 блоков вдоль X
