@@ -18,6 +18,7 @@ public class ModItems {
     public static final Item BACKROOMS_LAMP = new BlockItem(ModBlocks.BACKROOMS_LAMP, new Item.Settings());
     public static final Item SOGGY_WALL = new BlockItem(ModBlocks.SOGGY_WALL, new Item.Settings());
     public static final Item GREEN_WALLPAPER = new BlockItem(ModBlocks.GREEN_WALLPAPER, new Item.Settings());
+    public static final Item POOL_TILE = new BlockItem(ModBlocks.POOL_TILE, new Item.Settings());
 
     public static void register() {
         Registry.register(Registries.ITEM, new Identifier(BackroomsMod.MOD_ID, "backrooms_wall"), BACKROOMS_WALL);
@@ -26,6 +27,7 @@ public class ModItems {
         Registry.register(Registries.ITEM, new Identifier(BackroomsMod.MOD_ID, "backrooms_lamp"), BACKROOMS_LAMP);
         Registry.register(Registries.ITEM, new Identifier(BackroomsMod.MOD_ID, "soggy_wall"), SOGGY_WALL);
         Registry.register(Registries.ITEM, new Identifier(BackroomsMod.MOD_ID, "green_wallpaper"), GREEN_WALLPAPER);
+        Registry.register(Registries.ITEM, new Identifier(BackroomsMod.MOD_ID, "pool_tile"), POOL_TILE);
 
         // Добавляем в креативную вкладку "Строительные блоки"
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(content -> {
@@ -35,6 +37,7 @@ public class ModItems {
             content.add(BACKROOMS_LAMP);
             content.add(SOGGY_WALL);
             content.add(GREEN_WALLPAPER);
+            content.add(POOL_TILE);
         });
     }
 }

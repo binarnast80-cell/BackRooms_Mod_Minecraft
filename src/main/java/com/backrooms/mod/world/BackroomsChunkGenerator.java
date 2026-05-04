@@ -71,11 +71,13 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
     @Override
     public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender,
             NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
+        // Выносим состояния блоков за цикл
         BlockState floorState = ModBlocks.BACKROOMS_FLOOR.getDefaultState();
         BlockState wallState = ModBlocks.BACKROOMS_WALL.getDefaultState();
         BlockState ceilingState = ModBlocks.BACKROOMS_CEILING.getDefaultState();
         BlockState lampState = ModBlocks.BACKROOMS_LAMP.getDefaultState();
         BlockState airState = Blocks.AIR.getDefaultState();
+        BlockState plankState = Blocks.OAK_PLANKS.getDefaultState();
 
         int startX = chunk.getPos().getStartX();
         int startZ = chunk.getPos().getStartZ();
@@ -86,95 +88,67 @@ public class BackroomsChunkGenerator extends ChunkGenerator {
                 int wx = startX + lx;
                 int wz = startZ + lz;
 
-                // Проверка на Зараженную зону (доски)
+                // 1. Кешируем тяжелые проверки (шум и сетку)
                 boolean infected = isInfected(wx, wz);
-                BlockState currentFloor = infected ? Blocks.OAK_PLANKS.getDefaultState() : floorState;
-                BlockState currentWall = infected ? Blocks.OAK_PLANKS.getDefaultState() : wallState;
-                BlockState currentCeiling = infected ? Blocks.OAK_PLANKS.getDefaultState() : ceilingState;
-
-                // Пол
-                chunk.setBlockState(mutable.set(lx, FLOOR_Y, lz), currentFloor, false);
-
-                // Потолок (в зараженной зоне ламп нет)
                 boolean wall = isWall(wx, wz);
-                boolean isLamp = !infected && !wall && isLampPosition(wx, wz);
-                chunk.setBlockState(mutable.set(lx, CEILING_Y, lz),
-                        isLamp ? lampState : currentCeiling, false);
 
-                // Стены или воздух
+                // Выбираем материалы один раз
+                BlockState currentFloor = infected ? plankState : floorState;
+                BlockState currentWall = infected ? plankState : wallState;
+                BlockState currentCeiling = infected ? plankState : ceilingState;
+
+                // 2. Базовая структура (Пол, Потолок, Стены)
+                chunk.setBlockState(mutable.set(lx, FLOOR_Y, lz), currentFloor, false);
+                
+                boolean isLamp = !infected && !wall && isLampPosition(wx, wz);
+                chunk.setBlockState(mutable.set(lx, CEILING_Y, lz), isLamp ? lampState : currentCeiling, false);
+
                 for (int y = WALL_MIN_Y; y <= WALL_MAX_Y; y++) {
                     chunk.setBlockState(mutable.set(lx, y, lz), wall ? currentWall : airState, false);
                 }
 
-                // 100 блоков досок под полом (от 0 до FLOOR_Y - 1)
-                BlockState plankState = Blocks.OAK_PLANKS.getDefaultState();
+                // 3. Доски снизу и сверху (самый тяжелый блок по количеству итераций)
                 for (int y = 0; y < FLOOR_Y; y++) {
                     chunk.setBlockState(mutable.set(lx, y, lz), plankState, false);
                 }
-
-                // 100 блоков досок над потолком (от CEILING_Y + 1 до 206)
                 for (int y = CEILING_Y + 1; y <= 206; y++) {
                     chunk.setBlockState(mutable.set(lx, y, lz), plankState, false);
                 }
-            }
-        }
 
-        // ВТОРОЙ ПРОХОД: Расстановка настенных факелов в зараженной зоне (на высоте 3 блоков от пола)
-        for (int lx = 0; lx < 16; lx++) {
-            for (int lz = 0; lz < 16; lz++) {
-                int wx = startX + lx;
-                int wz = startZ + lz;
-                
-                if (!isInfected(wx, wz)) continue; // Только в зараженной деревянной зоне
-                if (isWall(wx, wz)) continue;      // Нам нужен пустой блок воздуха рядом со стеной
-                
-                long torchHash = mixHash(WORLD_SEED + 999, wx * 131L, wz * 137L);
-                if (Math.abs(torchHash) % 10000 < 21) { // 0.21% шанс
-                    net.minecraft.util.math.Direction dir = null;
-                    if (isWall(wx - 1, wz)) dir = net.minecraft.util.math.Direction.EAST;
-                    else if (isWall(wx + 1, wz)) dir = net.minecraft.util.math.Direction.WEST;
-                    else if (isWall(wx, wz - 1)) dir = net.minecraft.util.math.Direction.SOUTH;
-                    else if (isWall(wx, wz + 1)) dir = net.minecraft.util.math.Direction.NORTH;
+                // 4. Логика факелов (только если заражено и рядом стена)
+                if (infected && !wall) {
+                    long torchHash = mixHash(WORLD_SEED + 999, wx * 131L, wz * 137L);
+                    if (Math.abs(torchHash) % 10000 < 21) {
+                        net.minecraft.util.math.Direction dir = null;
+                        if (isWall(wx - 1, wz)) dir = net.minecraft.util.math.Direction.EAST;
+                        else if (isWall(wx + 1, wz)) dir = net.minecraft.util.math.Direction.WEST;
+                        else if (isWall(wx, wz - 1)) dir = net.minecraft.util.math.Direction.SOUTH;
+                        else if (isWall(wx, wz + 1)) dir = net.minecraft.util.math.Direction.NORTH;
 
-                    if (dir != null) {
-                        BlockState torchState = Blocks.WALL_TORCH.getDefaultState().with(net.minecraft.state.property.Properties.HORIZONTAL_FACING, dir);
-                        chunk.setBlockState(mutable.set(lx, WALL_MIN_Y + 2, lz), torchState, false); // WALL_MIN_Y + 2 это 3-й блок стены
+                        if (dir != null) {
+                            BlockState torchState = Blocks.WALL_TORCH.getDefaultState().with(net.minecraft.state.property.Properties.HORIZONTAL_FACING, dir);
+                            chunk.setBlockState(mutable.set(lx, WALL_MIN_Y + 2, lz), torchState, false);
+                        }
                     }
                 }
-            }
-        }
 
-        // ТРЕТИЙ ПРОХОД: Генерация пятен чёрной плесени (везде в Backrooms)
-        // 8 уровней плотности — от 1-2 пикселей на краю до густой плесени в центре
-        for (int lx = 0; lx < 16; lx++) {
-            for (int lz = 0; lz < 16; lz++) {
-                int wx = startX + lx;
-                int wz = startZ + lz;
+                // 5. Логика плесени (только если не стена)
+                if (!wall) {
+                    double moldNoise = simpleNoise(wx / 8.0, wz / 8.0, WORLD_SEED + 700);
+                    double moldDetail = simpleNoise(wx / 3.0, wz / 3.0, WORLD_SEED + 701);
+                    double moldMicro = simpleNoise(wx / 1.5, wz / 1.5, WORLD_SEED + 702);
+                    double moldValue = moldNoise * 0.55 + moldDetail * 0.30 + moldMicro * 0.15;
 
-                if (isWall(wx, wz)) continue;
+                    if (moldValue > 0.75) {
+                        double normalized = (moldValue - 0.75) / 0.20;
+                        normalized = Math.min(1.0, normalized);
+                        double curved = normalized * normalized;
+                        int density = (int) Math.min(7, Math.floor(curved * 8));
 
-                // Многослойный шум для органичных пятен разных размеров (2-17 блоков)
-                double moldNoise = simpleNoise(wx / 8.0, wz / 8.0, WORLD_SEED + 700);
-                double moldDetail = simpleNoise(wx / 3.0, wz / 3.0, WORLD_SEED + 701);
-                double moldMicro = simpleNoise(wx / 1.5, wz / 1.5, WORLD_SEED + 702);
-                double moldValue = moldNoise * 0.55 + moldDetail * 0.30 + moldMicro * 0.15;
-
-                // Порог 0.75: пятна появляются чаще
-                if (moldValue > 0.75) {
-                    // Градиент с квадратичной кривой: края разреженные, центр без зазоров
-                    double normalized = (moldValue - 0.75) / 0.20; // 0.0 .. 1.0+
-                    normalized = Math.min(1.0, normalized);
-                    // Квадратичная кривая: быстро набирает плотность к центру
-                    double curved = normalized * normalized;
-                    int density = (int) Math.min(7, Math.floor(curved * 8));
-
-                    BlockState moldState = ModBlocks.BLACK_MOLD.getDefaultState()
-                            .with(BlackMoldBlock.DENSITY, density);
-
-                    // Ставим плесень на пол (поверх пола, Y = WALL_MIN_Y)
-                    BlockPos floorCheck = new BlockPos(lx, WALL_MIN_Y, lz);
-                    if (chunk.getBlockState(floorCheck).isAir()) {
-                        chunk.setBlockState(mutable.set(lx, WALL_MIN_Y, lz), moldState, false);
+                        BlockState moldState = ModBlocks.BLACK_MOLD.getDefaultState().with(BlackMoldBlock.DENSITY, density);
+                        if (chunk.getBlockState(mutable.set(lx, WALL_MIN_Y, lz)).isAir()) {
+                            chunk.setBlockState(mutable, moldState, false);
+                        }
                     }
                 }
             }

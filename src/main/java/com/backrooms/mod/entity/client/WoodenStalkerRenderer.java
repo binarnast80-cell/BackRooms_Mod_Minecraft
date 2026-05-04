@@ -8,10 +8,10 @@ import net.minecraft.util.Identifier;
 
 public class WoodenStalkerRenderer extends MobEntityRenderer<WoodenStalkerEntity, WoodenStalkerModel> {
 
-    private static final Identifier TEXTURE = new Identifier("minecraft", "textures/block/oak_planks.png");
+    private static final Identifier TEXTURE = new Identifier(BackroomsMod.MOD_ID, "textures/entity/wooden_stalker.png");
 
     public WoodenStalkerRenderer(EntityRendererFactory.Context context) {
-        super(context, new WoodenStalkerModel(context.getPart(WoodenStalkerModel.LAYER)), 0.5f);
+        super(context, new WoodenStalkerModel(context.getPart(WoodenStalkerModel.LAYER)), 0.6f);
     }
 
     @Override

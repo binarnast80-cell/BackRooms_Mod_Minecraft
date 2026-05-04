@@ -130,8 +130,7 @@ public class ModBlocks {
         public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
             super.onBlockAdded(state, world, pos, oldState, notify);
             // Запускаем цепочку мигания сразу (1-16 сек задержка)
-            if (!world.isClient() && state.get(LIT)) {
-                ServerWorld sw = (ServerWorld) world;
+            if (!world.isClient() && world instanceof ServerWorld sw) {
                 if (!sw.getBlockTickScheduler().isQueued(pos, this)) {
                     int delay = 20 + sw.random.nextInt(261); // 1-14 секунд
                     sw.scheduleBlockTick(pos, this, delay);
@@ -206,6 +205,14 @@ public class ModBlocks {
                     .dropsNothing()
     );
 
+    // Плитка Pool Rooms — НЕУЯЗВИМА
+    public static final Block POOL_TILE = new Block(
+            FabricBlockSettings.create()
+                    .strength(-1.0f, 3600000.0f)
+                    .sounds(BlockSoundGroup.STONE)
+                    .dropsNothing()
+    );
+
     public static void register() {
         // Регистрация блоков
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "backrooms_wall"), BACKROOMS_WALL);
@@ -215,5 +222,6 @@ public class ModBlocks {
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "soggy_wall"), SOGGY_WALL);
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "green_wallpaper"), GREEN_WALLPAPER);
         Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "black_mold"), BLACK_MOLD);
+        Registry.register(Registries.BLOCK, new Identifier(BackroomsMod.MOD_ID, "pool_tile"), POOL_TILE);
     }
 }
